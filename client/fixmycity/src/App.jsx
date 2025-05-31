@@ -1,12 +1,9 @@
-import { useState } from "react";
-import "./App.css";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
 } from "react-router-dom";
-
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 
@@ -19,35 +16,47 @@ import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import Analysis from "./pages/admin/Analysis";
 
+import ProtectedRoute from "./components/common/ProtectedRoute";
+
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Router>
-        <Routes>
-          {/* Public Auth Routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-          {/* User Routes */}
-          <Route path="/user" element={<UserLayout />}>
-            <Route index element={<UserHome />} />
-            <Route path="report" element={<ReportIssue />} />
-            <Route path="community" element={<Community />} />
-          </Route>
+        {/* Protected User Routes */}
+        <Route
+          path="/user"
+          element={
+            <ProtectedRoute allowedRole="user">
+              <UserLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<UserHome />} />
+          <Route path="report" element={<ReportIssue />} />
+          <Route path="community" element={<Community />} />
+        </Route>
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="analysis" element={<Analysis />} />
-          </Route>
+        {/* Protected Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRole="admin">
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="analysis" element={<Analysis />} />
+        </Route>
 
-          {/* Catch-All Route */}
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </Router>
-    </>
+        {/* Catch-All Route */}
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </Router>
   );
 }
 
