@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FiHome, FiAlertCircle, FiUsers, FiLogOut } from "react-icons/fi";
 
 export default function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const isLoggedIn = !!localStorage.getItem("token");
   const role = localStorage.getItem("role");
@@ -29,19 +30,33 @@ export default function Navbar() {
           <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
             <Link
               to="/user"
-              className="border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                location.pathname === "/user"
+                  ? "border-blue-500 text-gray-900"
+                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              }`}
             >
               <FiHome className="mr-1" /> Home
             </Link>
+
             <Link
               to="/user/report"
-              className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                location.pathname === "/user/report"
+                  ? "border-blue-500 text-gray-900"
+                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              }`}
             >
               <FiAlertCircle className="mr-1" /> Report Issue
             </Link>
+
             <Link
               to="/user/community"
-              className="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
+                location.pathname === "/user/community"
+                  ? "border-blue-500 text-gray-900"
+                  : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+              }`}
             >
               <FiUsers className="mr-1" /> Community
             </Link>
