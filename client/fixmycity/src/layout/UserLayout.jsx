@@ -1,16 +1,15 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/user/Navbar";
+import Footer from "../components/user/Footer";
 
 export default function UserLayout() {
   return (
-    <div>
-      <nav>
-        <Link to="/user">Home</Link> |{" "}
-        <Link to="/user/report">Report Issue</Link>
-        <Link to="/user/community">Community</Link> {/* New link */}
-      </nav>
-      <main>
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <main className="flex-grow">
         <Outlet />
       </main>
+      <Footer />
     </div>
   );
 }
