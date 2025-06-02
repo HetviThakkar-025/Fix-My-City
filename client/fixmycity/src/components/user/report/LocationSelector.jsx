@@ -58,7 +58,7 @@ export default function LocationSelector({
       const res = await fetch(
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
           value
-        )}&limit=5&addressdetails=1`,
+        )}&limit=5&addressdetails=1&countrycodes=in`,
         {
           headers: {
             "Accept-Language": "en",
@@ -114,10 +114,15 @@ export default function LocationSelector({
       {/* Leaflet Map */}
       <div className="h-64 w-full rounded border overflow-hidden">
         <MapContainer
-          center={position || [28.6139, 77.209]}
-          zoom={13}
+          center={position || [22.9734, 78.6569]} // Center of India
+          zoom={5}
           scrollWheelZoom={true}
           style={{ height: "100%", width: "100%" }}
+          maxBounds={[
+            [6.5546079, 68.1113787], // Southwest India
+            [35.6745457, 97.395561], // Northeast India
+          ]}
+          maxBoundsViscosity={1.0}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

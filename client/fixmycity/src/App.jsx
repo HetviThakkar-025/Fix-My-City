@@ -12,6 +12,7 @@ import UserLayout from "./layout/UserLayout";
 import UserHome from "./pages/user/Home";
 import ReportIssue from "./pages/user/ReportIssue";
 import Community from "./pages/user/Community";
+import TrackProgress from "./pages/user/TrackProgress";
 
 import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -39,6 +40,7 @@ function App() {
           <Route index element={<UserHome />} />
           <Route path="report" element={<ReportIssue />} />
           <Route path="community" element={<Community />} />
+          <Route path="trackprogress" element={<TrackProgress />} />
         </Route>
 
         {/* Protected Admin Routes */}
