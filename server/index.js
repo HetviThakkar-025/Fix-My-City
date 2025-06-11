@@ -8,6 +8,10 @@ const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const issueRoutes = require("./routes/issueRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
+const pollRoutes = require("./routes/pollRoutes");
+const announcementRoutes = require("./routes/announcementRoutes");
+const feedbackRoutes = require("./routes/feedbackRoutes");
+const notificationRoutes = require("./routes/notificationRoutes");
 
 const app = express();
 app.use(express.json());
@@ -16,6 +20,10 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/upload", uploadRoutes);
+app.use("/api/polls", pollRoutes);
+app.use("/api/announcements", announcementRoutes);
+app.use("/api/feedback", feedbackRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 // Connect to MongoDB Atlas
 connectDB();

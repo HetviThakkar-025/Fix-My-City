@@ -38,3 +38,21 @@ exports.getMyIssues = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch your issues" });
   }
 };
+
+exports.getCommunityReports = async (req, res) => {
+  try {
+    const { city, status } = req.query;
+    const query = {};
+
+    if (city) query["location.address"] = { $regex: city, $options: "i" };
+    if (status && status !== "all") query.status = status;
+
+    const reports = await Issue.find(query)
+      .sort({ createdAt: -1 })
+      .populate("createdBy", "username");
+
+    res.status(200).json(reports);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch reports" });
+  }
+};
