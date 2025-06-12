@@ -4,7 +4,13 @@ const generateToken = require("../utils/generateToken");
 
 exports.register = async (req, res) => {
   try {
-    const { username, email, password, role } = req.body;
+    const { name, email, password, role } = req.body;
+
+    console.log("Registering:", { name, email, role }); // 👈 debug
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     const existing = await User.findOne({ email });
     if (existing)
@@ -13,7 +19,7 @@ exports.register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
-      username,
+      name,
       email,
       password: hashedPassword,
       role,
@@ -22,6 +28,7 @@ exports.register = async (req, res) => {
 
     res.status(201).json({ token, role: newUser.role });
   } catch (err) {
+    console.error("❌ Register Controller Error:", err); // 👈 print actual error
     res.status(500).json({ error: err.message });
   }
 };

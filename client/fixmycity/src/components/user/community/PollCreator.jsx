@@ -30,12 +30,23 @@ export default function PollCreator({ onPollCreated }) {
     setIsSubmitting(true);
 
     try {
+      const token = localStorage.getItem("token");
       const validOptions = options.filter((opt) => opt.trim() !== "");
-      const response = await axios.post("/api/polls", {
-        question,
-        options: validOptions,
-      });
-      onPollCreated(response.data);
+
+      const res = await axios.post(
+        "/api/polls",
+        {
+          question,
+          options: validOptions,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      onPollCreated?.(res.data);
       setQuestion("");
       setOptions(["", ""]);
     } catch (error) {

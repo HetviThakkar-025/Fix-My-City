@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import LocationSelector from "../../components/user/report/LocationSelector";
 import SeveritySelector from "../../components/user/report/SeveritySelector";
@@ -38,16 +39,48 @@ export default function ReportIssue() {
     setIsSubmitting(true);
 
     try {
-      // In a real app, you would submit to your backend here
-      console.log("Submitting:", formData);
+      const token = localStorage.getItem("token");
+      console.log("Token: ", token);
+      // 1. Upload each image to Cloudinary via your server
+      const uploadedImageURLs = [];
 
-      // Mock API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      for (const image of formData.images) {
+        const formDataImg = new FormData();
+        formDataImg.append("image", image.file);
+        console.log("Uploading image to backend:", image);
 
-      // Navigate to confirmation or home page
+        const res = await axios.post("/api/upload", formDataImg, {
+          // console.log("Uploaded image response:", res.data);
+          headers: {
+            // "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        uploadedImageURLs.push(res.data.url);
+        console.log("Uploaded image response:", res.data);
+      }
+
+      // 2. Submit the issue to backend
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        location: formData.location,
+        severity: formData.severity,
+        tags: formData.tags,
+        images: uploadedImageURLs,
+        isAnonymous: formData.isAnonymous,
+      };
+
+      await axios.post("/api/issues", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       navigate("/user");
     } catch (error) {
       console.error("Submission error:", error);
+      alert("Failed to submit. Try again.");
     } finally {
       setIsSubmitting(false);
     }

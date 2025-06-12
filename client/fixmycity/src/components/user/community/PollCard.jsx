@@ -6,7 +6,7 @@ export default function PollCard({ poll, onVote }) {
 
   const handleVote = () => {
     if (!selectedOption) return;
-    onVote(poll._id, selectedOption);
+    onVote(poll._id, selectedOption); // selectedOption is now the string
     setHasVoted(true);
   };
 
@@ -21,10 +21,10 @@ export default function PollCard({ poll, onVote }) {
               <input
                 type="radio"
                 name={`poll-${poll._id}`}
-                value={opt}
-                onChange={() => setSelectedOption(opt)}
+                value={opt.text}
+                onChange={() => setSelectedOption(opt.text)}
               />
-              <span>{opt}</span>
+              <span>{opt.text}</span>
             </label>
           ))}
           <button

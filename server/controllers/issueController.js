@@ -56,3 +56,18 @@ exports.getCommunityReports = async (req, res) => {
     res.status(500).json({ message: "Failed to fetch reports" });
   }
 };
+
+// exports.upvoteIssue = async (req, res) => {
+//   try {
+//     const issue = await Issue.findById(req.params.id);
+//     if (!issue) {
+//       return res.status(404).json({ message: "Issue not found" });
+//     }
+
+//     issue.upvotes = (issue.upvotes || 0) + 1;
+//     await issue.save();
+//     res.status(200).json({ upvotes: issue.upvotes });
+//   } catch (err) {
+//     res.status(500).json({ message: "Failed to upvote", error: err.message });
+//   }
+// };

@@ -38,8 +38,3 @@ export default function Community() {
     </div>
   );
 }
-
-//  <Tab label="Polls" value="polls">
-//           <PollCreator onPollCreated={() => setActiveTab("polls")} />
-//           {/* PollList component would go here */}
-//         </Tab>

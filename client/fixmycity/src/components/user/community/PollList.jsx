@@ -7,26 +7,10 @@ export default function PollList() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Replace with real API later
     const fetchPolls = async () => {
       try {
-        const mockPolls = [
-          {
-            _id: "1",
-            question: "Should we install more streetlights?",
-            options: ["Yes", "No", "Maybe"],
-            hasVoted: false,
-          },
-          {
-            _id: "2",
-            question: "Which area needs cleaning first?",
-            options: ["Sector 5", "Sector 12", "Sector 22"],
-            hasVoted: false,
-          },
-        ];
-        // const res = await axios.get("/api/polls");
-        // setPolls(res.data);
-        setPolls(mockPolls);
+        const res = await axios.get("/api/polls");
+        setPolls(res.data);
       } catch (err) {
         console.error("Error fetching polls", err);
       } finally {
@@ -39,7 +23,17 @@ export default function PollList() {
 
   const handleVote = async (pollId, option) => {
     try {
-      // await axios.post(`/api/polls/${pollId}/vote`, { option });
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `/api/polls/${pollId}/vote`,
+        { option },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setPolls((prev) =>
         prev.map((poll) =>
           poll._id === pollId ? { ...poll, hasVoted: true } : poll

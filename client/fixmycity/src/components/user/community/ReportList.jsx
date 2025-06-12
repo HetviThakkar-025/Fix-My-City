@@ -7,88 +7,40 @@ export default function ReportList({ cityFilter }) {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
 
-  //   for backend
-  //   useEffect(() => {
-  //     const fetchReports = async () => {
-  //       try {
-  //         const response = await axios.get("/api/reports", {
-  //           params: { city: cityFilter, status: filter },
-  //         });
-  //         setReports(response.data);
-  //       } catch (error) {
-  //         console.error("Error fetching reports:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchReports();
-  //   }, [cityFilter, filter]);
-
-  //   mock data
   useEffect(() => {
-    setLoading(true);
-
-    // Simulate backend delay
-    const timeout = setTimeout(() => {
-      const mockReports = [
-        {
-          _id: "1",
-          title: "Overflowing Garbage in Sector 5",
-          description: "There’s been no garbage pickup for 3 days.",
-          location: {
-            address: "Sector 5, Noida, Uttar Pradesh",
+    const fetchReports = async () => {
+      try {
+        const res = await axios.get("/api/issues/community", {
+          params: {
+            city: cityFilter,
+            status: filter !== "all" ? filter : undefined,
           },
-          severity: "critical",
-          images: [
-            "https://via.placeholder.com/150",
-            "https://via.placeholder.com/150",
-          ],
-          upvotes: 4,
-          userUpvoted: false,
-          comments: [{ id: 1, text: "Same issue here!" }],
-          status: "open",
-          isAnonymous: false,
-          createdBy: { username: "Ravi123" },
-        },
-        {
-          _id: "2",
-          title: "Streetlight not working",
-          description: "The streetlight near the park is broken.",
-          location: {
-            address: "Rajiv Chowk, Delhi",
-          },
-          severity: "medium",
-          images: [],
-          upvotes: 2,
-          userUpvoted: true,
-          comments: [],
-          status: "resolved",
-          isAnonymous: true,
-          createdBy: { username: "Priya89" },
-        },
-      ];
+        });
+        setReports(res.data || []);
+      } catch (err) {
+        console.error("Error fetching community reports:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-      // Filter by city and status (if not "all")
-      const filtered = mockReports.filter(
-        (r) =>
-          (!cityFilter ||
-            r.location?.address
-              ?.toLowerCase()
-              .includes(cityFilter.toLowerCase())) &&
-          (filter === "all" || r.status === filter)
-      );
-
-      setReports(filtered);
-      setLoading(false);
-    }, 500); // simulate 500ms load
-
-    return () => clearTimeout(timeout);
+    fetchReports();
   }, [cityFilter, filter]);
 
   const handleUpvote = async (reportId) => {
     try {
-      await axios.post(`/api/reports/${reportId}/upvote`);
+      const token = localStorage.getItem("token");
+
+      await axios.post(
+        `/api/issues/${reportId}/upvote`,
+        {}, // empty body
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
       setReports(
         reports.map((report) =>
           report._id === reportId

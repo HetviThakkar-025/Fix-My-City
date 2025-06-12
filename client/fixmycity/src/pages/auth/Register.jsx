@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -10,34 +11,33 @@ function Register() {
 
   const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    // Client-side mock: Save to localStorage (you'll replace this with backend call later)
     try {
-      const newUser = {
+      const res = await axios.post("/api/auth/register", {
         name,
         email,
         password,
         role,
-      };
+      });
 
-      // Simulate token
-      const token = "mock-jwt-token";
+      const { token, role: userRole } = res.data;
 
       localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
-      localStorage.setItem("userData", JSON.stringify(newUser));
+      localStorage.setItem("role", userRole);
 
       // Redirect based on role
-      if (role === "admin") {
+      if (userRole === "admin") {
         navigate("/admin");
       } else {
         navigate("/user");
       }
     } catch (err) {
       console.error(err);
-      setError("Registration failed. Please try again.");
+      setError(
+        err.response?.data?.message || "Registration failed. Please try again."
+      );
     }
   };
 

@@ -9,6 +9,15 @@ const {
 
 router.post("/", protect, createPoll);
 router.get("/", getPolls);
-router.post("/vote", protect, votePoll);
+router.post(
+  "/:id/vote",
+  protect,
+  (req, res, next) => {
+    console.log("➡️ Vote route hit:", req.params.id, req.body.option);
+    next();
+  },
+  votePoll
+);
+// router.post("/:id/vote", protect, votePoll);
 
 module.exports = router;
