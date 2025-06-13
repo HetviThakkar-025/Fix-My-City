@@ -1,21 +1,42 @@
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import { FiAlertTriangle, FiUsers, FiMap, FiTrendingUp } from "react-icons/fi";
 
 function UserHome() {
-  // Mock data for demonstration
-  const stats = [
-    { value: "1,240", label: "Issues Reported" },
-    { value: "87%", label: "Issues Resolved" },
-    { value: "48h", label: "Avg. Response Time" },
-    { value: "4.2★", label: "Citizen Satisfaction" },
-  ];
+  const [stats, setStats] = useState([]);
+  const [trendingIssues, setTrendingIssues] = useState([]);
 
-  const trendingIssues = [
-    { id: 1, type: "Potholes", count: 142, icon: <FiAlertTriangle /> },
-    { id: 2, type: "Street Lights", count: 98, icon: <FiAlertTriangle /> },
-    { id: 3, type: "Garbage", count: 76, icon: <FiAlertTriangle /> },
-    { id: 4, type: "Water Leaks", count: 53, icon: <FiAlertTriangle /> },
-  ];
+  useEffect(() => {
+    const fetchHomeData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("/api/user/home", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setStats(res.data.stats);
+        setTrendingIssues(res.data.trendingIssues);
+      } catch (err) {
+        console.error("Error fetching home data", err);
+      }
+    };
+
+    fetchHomeData();
+  }, []);
+
+  const getIssueIcon = (type) => {
+    switch (type.toLowerCase()) {
+      case "potholes":
+      case "garbage":
+      case "water leaks":
+      case "street lights":
+        return <FiAlertTriangle />;
+      default:
+        return <FiAlertTriangle />;
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -100,14 +121,14 @@ function UserHome() {
       {/* Trending Issues */}
       <div className="max-w-6xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold mb-8">Currently Trending Issues</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {trendingIssues.map((issue) => (
             <div
               key={issue.id}
               className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500"
             >
               <div className="flex items-center gap-3">
-                <div className="text-blue-500">{issue.icon}</div>
+                <div className="text-blue-500">{getIssueIcon(issue.type)}</div>
                 <div>
                   <h3 className="font-medium">{issue.type}</h3>
                   <p className="text-gray-500 text-sm">{issue.count} reports</p>
@@ -141,89 +162,3 @@ function UserHome() {
 }
 
 export default UserHome;
-
-// REPLACE MOCK DATA WITH REAL DATA FROM BACKEND
-//  Import React hooks and Axios
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-
-// Setup State Instead of Static Arrays
-// Replace your mock data with state:
-// const [stats, setStats] = useState([]);
-// const [trendingIssues, setTrendingIssues] = useState([]);
-
-// ✅ 3. Fetch Real Data on Page Load
-// Use useEffect():
-// useEffect(() => {
-//   const fetchHomeData = async () => {
-//     try {
-//       const token = localStorage.getItem("token");
-
-//       const res = await axios.get("/api/user/home", {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//         },
-//       });
-
-//       setStats(res.data.stats);
-//       setTrendingIssues(res.data.trendingIssues);
-//     } catch (error) {
-//       console.error("Error fetching home data", error);
-//     }
-//   };
-
-//   fetchHomeData();
-// }, []);
-
-// ✅ 4. Your Backend Should Return This Structure
-// Example response from backend (/api/user/home):
-
-// {
-//   "stats": [
-//     { "value": "1,586", "label": "Issues Reported" },
-//     { "value": "91%", "label": "Issues Resolved" },
-//     { "value": "36h", "label": "Avg. Response Time" },
-//     { "value": "4.6★", "label": "Citizen Satisfaction" }
-//   ],
-//   "trendingIssues": [
-//     { "id": 1, "type": "Potholes", "count": 152 },
-//     { "id": 2, "type": "Street Lights", "count": 99 },
-//     { "id": 3, "type": "Garbage", "count": 85 },
-//     { "id": 4, "type": "Water Leaks", "count": 62 }
-//   ]
-// }
-
-// To attach icons for trending issues, add logic when rendering:
-
-// const getIssueIcon = (type) => {
-//   switch (type) {
-//     case "Potholes":
-//     case "Street Lights":
-//     case "Garbage":
-//     case "Water Leaks":
-//       return <FiAlertTriangle />;
-//     default:
-//       return <FiAlertTriangle />;
-//   }
-// };
-
-// And in your map:
-
-// {trendingIssues.map((issue) => (
-//   <div key={issue.id} className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-blue-500">
-//     <div className="flex items-center gap-3">
-//       <div className="text-blue-500">{getIssueIcon(issue.type)}</div>
-//       <div>
-//         <h3 className="font-medium">{issue.type}</h3>
-//         <p className="text-gray-500 text-sm">{issue.count} reports</p>
-//       </div>
-//     </div>
-//   </div>
-// ))}
-
-// ✅ Summary
-// Task	Status
-// Replace mock data	✅ Done using useState
-// Fetch real data on load	✅ Done using axios + useEffect
-// Use token for secure route	✅ Done with headers
-// Attach icons conditionally	✅ Optional helper added

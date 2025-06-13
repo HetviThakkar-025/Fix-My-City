@@ -7,51 +7,40 @@ export default function Notifications() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // BACKEND...
-    // const fetchNotifications = async () => {
-    //   try {
-    //     const response = await axios.get("/api/notifications");
-    //     setNotifications(response.data);
-    //   } catch (error) {
-    //     console.error("Error fetching notifications:", error);
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
+    const fetchNotifications = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("/api/notifications", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setNotifications(res.data);
+      } catch (error) {
+        console.error("Error fetching notifications:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // fetchNotifications();
-
-    // REAL-TIME..
-    // Set up real-time updates with WebSocket or polling
-    // const socket = new WebSocket(process.env.REACT_APP_WS_URL);
-    // socket.onmessage = (event) => {
-    //   const newNotification = JSON.parse(event.data);
-    //   setNotifications((prev) => [newNotification, ...prev]);
-    // };
-
-    // MOCK NOTIFS...
-    setTimeout(() => {
-      setNotifications([
-        {
-          _id: "n1",
-          title: "Issue Resolved",
-          message: "Your report on water leakage has been marked resolved.",
-          type: "resolved",
-          read: false,
-          createdAt: new Date().toISOString(),
-        },
-      ]);
-      setLoading(false);
-    }, 500);
-
-    // return () => socket.close();
+    fetchNotifications();
   }, []);
 
   const markAsRead = async (id) => {
     try {
-      await axios.patch(`/api/notifications/${id}/read`);
-      setNotifications(
-        notifications.map((n) => (n._id === id ? { ...n, read: true } : n))
+      const token = localStorage.getItem("token");
+      await axios.patch(
+        `/api/notifications/${id}/read`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setNotifications((prev) =>
+        prev.map((n) => (n._id === id ? { ...n, read: true } : n))
       );
     } catch (error) {
       console.error("Error marking notification as read:", error);
@@ -103,5 +92,4 @@ export default function Notifications() {
       )}
     </div>
   );
-  
 }

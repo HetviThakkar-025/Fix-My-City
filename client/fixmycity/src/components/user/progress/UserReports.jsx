@@ -8,50 +8,24 @@ export default function UserReports() {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ title: "", description: "" });
 
-  //   backend ----
-  //   useEffect(() => {
-  //     const fetchUserReports = async () => {
-  //       try {
-  //         const response = await axios.get("/api/reports/my-reports");
-  //         setReports(response.data);
-  //       } catch (error) {
-  //         console.error("Error fetching reports:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchUserReports();
-  //   }, []);
-
   useEffect(() => {
-    setLoading(true);
+    const fetchUserReports = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("/api/issues/my-reports", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setReports(response.data);
+      } catch (error) {
+        console.error("Error fetching reports:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const timeout = setTimeout(() => {
-      const mockReports = [
-        {
-          _id: "r1",
-          title: "Broken Drain Cover",
-          description: "Drain cover is missing near sector 10 market.",
-          location: { address: "Sector 10, Gurugram" },
-          severity: "medium",
-          status: "open",
-        },
-        {
-          _id: "r2",
-          title: "Water Leakage",
-          description: "Water leaking from underground pipe.",
-          location: { address: "Lajpat Nagar, Delhi" },
-          severity: "critical",
-          status: "resolved",
-        },
-      ];
-
-      setReports(mockReports);
-      setLoading(false);
-    }, 400);
-
-    return () => clearTimeout(timeout);
+    fetchUserReports();
   }, []);
 
   const handleEdit = (report) => {
@@ -64,7 +38,11 @@ export default function UserReports() {
 
   const handleEditSubmit = async (reportId) => {
     try {
-      await axios.patch(`/api/reports/${reportId}`, editForm);
+      await axios.patch(`/api/issues/${reportId}`, editForm, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setReports(
         reports.map((report) =>
           report._id === reportId ? { ...report, ...editForm } : report
@@ -78,7 +56,11 @@ export default function UserReports() {
 
   const handleDelete = async (reportId) => {
     try {
-      await axios.delete(`/api/reports/${reportId}`);
+      await axios.delete(`/api/issues/${reportId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
       setReports(reports.filter((report) => report._id !== reportId));
     } catch (error) {
       console.error("Error deleting report:", error);

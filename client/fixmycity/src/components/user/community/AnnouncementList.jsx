@@ -5,46 +5,19 @@ export default function AnnouncementList() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  //   backend
-  //   useEffect(() => {
-  //     const fetchAnnouncements = async () => {
-  //       try {
-  //         const response = await axios.get("/api/announcements");
-  //         setAnnouncements(response.data);
-  //       } catch (error) {
-  //         console.error("Error fetching announcements:", error);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchAnnouncements();
-  //   }, []);
-
-  //   mock
   useEffect(() => {
-    setLoading(true);
+    const fetchAnnouncements = async () => {
+      try {
+        const res = await axios.get("/api/announcements");
+        setAnnouncements(res.data || []);
+      } catch (error) {
+        console.error("Error fetching announcements:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    const timeout = setTimeout(() => {
-      const mockAnnouncements = [
-        {
-          _id: "a1",
-          title: "Water supply maintenance",
-          content:
-            "Water will be unavailable in Sector 12 tomorrow from 9AM–1PM.",
-          createdAt: new Date().toISOString(),
-          resolvedReports: [
-            { _id: "r1", title: "Leakage near main road" },
-            { _id: "r2", title: "Water overflow in lane 3" },
-          ],
-        },
-      ];
-
-      setAnnouncements(mockAnnouncements);
-      setLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timeout);
+    fetchAnnouncements();
   }, []);
 
   return (

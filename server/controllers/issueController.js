@@ -57,17 +57,58 @@ exports.getCommunityReports = async (req, res) => {
   }
 };
 
-// exports.upvoteIssue = async (req, res) => {
+exports.upvoteIssue = async (req, res) => {
+  try {
+    const issue = await Issue.findById(req.params.id);
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+
+    // Initialize if not present
+    if (typeof issue.upvotes !== "number") {
+      issue.upvotes = 0;
+    }
+
+    issue.upvotes += 1;
+    await issue.save();
+
+    res
+      .status(200)
+      .json({ message: "Upvoted successfully", upvotes: issue.upvotes });
+  } catch (error) {
+    console.error("Upvote error:", error);
+    res.status(500).json({ message: "Failed to upvote" });
+  }
+};
+
+// PATCH /api/issues/:id
+exports.updateIssue = async (req, res) => {
+  try {
+    const issue = await Issue.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+    res.status(200).json(issue);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to update issue" });
+  }
+};
+
+// DELETE /api/issues/:id
+exports.deleteIssue = async (req, res) => {
+  try {
+    const issue = await Issue.findByIdAndDelete(req.params.id);
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
+    res.status(200).json({ message: "Issue deleted" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete issue" });
+  }
+};
+
+// exports.getSingleIssue = async (req, res) => {
 //   try {
 //     const issue = await Issue.findById(req.params.id);
-//     if (!issue) {
-//       return res.status(404).json({ message: "Issue not found" });
-//     }
-
-//     issue.upvotes = (issue.upvotes || 0) + 1;
-//     await issue.save();
-//     res.status(200).json({ upvotes: issue.upvotes });
+//     if (!issue) return res.status(404).json({ message: "Not found" });
+//     res.status(200).json(issue);
 //   } catch (err) {
-//     res.status(500).json({ message: "Failed to upvote", error: err.message });
+//     res.status(500).json({ message: "Error fetching report" });
 //   }
 // };

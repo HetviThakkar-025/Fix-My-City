@@ -41,7 +41,7 @@ export default function ReportList({ cityFilter }) {
         }
       );
 
-      setReports(
+      setReports( 
         reports.map((report) =>
           report._id === reportId
             ? { ...report, upvotes: report.upvotes + 1, userUpvoted: true }

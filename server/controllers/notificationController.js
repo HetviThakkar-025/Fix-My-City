@@ -24,3 +24,26 @@ exports.markNotificationRead = async (req, res) => {
     res.status(500).json({ message: "Failed to mark as read" });
   }
 };
+
+// POST /api/notifications
+exports.createNotification = async (req, res) => {
+  try {
+    const { user, title, message, type } = req.body;
+
+    if (!user || !title || !message) {
+      return res.status(400).json({ message: "Missing required fields" });
+    }
+
+    const newNotif = await Notification.create({
+      user,
+      title,
+      message,
+      type: type || "info",
+    });
+
+    res.status(201).json(newNotif);
+  } catch (error) {
+    console.error("❌ Error creating notification:", error);
+    res.status(500).json({ message: "Failed to create notification" });
+  }
+};

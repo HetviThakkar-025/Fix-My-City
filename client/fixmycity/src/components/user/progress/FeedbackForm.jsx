@@ -21,7 +21,14 @@ export default function FeedbackForm() {
     setIsSubmitting(true);
 
     try {
-      await axios.post("/api/feedback", formData);
+      const token = localStorage.getItem("token"); // ⬅️ Get token from localStorage
+
+      await axios.post("/api/feedback", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`, // ⬅️ Send auth header
+        },
+      });
+
       setIsSubmitted(true);
       setFormData({
         service: "",
