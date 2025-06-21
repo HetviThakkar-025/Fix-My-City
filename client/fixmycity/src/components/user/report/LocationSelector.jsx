@@ -114,13 +114,13 @@ export default function LocationSelector({
       {/* Leaflet Map */}
       <div className="h-64 w-full rounded border overflow-hidden">
         <MapContainer
-          center={position || [22.9734, 78.6569]} // Center of India
-          zoom={5}
+          center={position || [23.0225, 72.5714]} // Ahmedabad
+          zoom={13}
           scrollWheelZoom={true}
           style={{ height: "100%", width: "100%" }}
           maxBounds={[
-            [6.5546079, 68.1113787], // Southwest India
-            [35.6745457, 97.395561], // Northeast India
+            [22.95, 72.48], // Southwest of Ahmedabad
+            [23.12, 72.65], // Northeast of Ahmedabad
           ]}
           maxBoundsViscosity={1.0}
         >
