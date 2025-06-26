@@ -16,7 +16,8 @@ import TrackProgress from "./pages/user/TrackProgress";
 
 import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
-import Analysis from "./pages/admin/Analysis";
+import AllReports from "./pages/admin/AllReports";
+import WardZones from "./pages/admin/WardZones";
 
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
@@ -53,7 +54,8 @@ function App() {
           }
         >
           <Route index element={<AdminDashboard />} />
-          <Route path="analysis" element={<Analysis />} />
+          <Route path="allreports" element={<AllReports />} />
+          <Route path="zones" element={<WardZones />} />
         </Route>
 
         {/* Catch-All Route */}
