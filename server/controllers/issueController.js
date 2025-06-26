@@ -1,5 +1,112 @@
 const Issue = require("../models/Issue");
 
+const getZoneFromAddress = (address) => {
+  if (!address) return null;
+  const lower = address.toLowerCase();
+
+  const zoneMap = {
+    Central: [
+      "jamalpur",
+      "kalupur",
+      "shahpur",
+      "dariyapur",
+      "astodia",
+      "khamasa",
+      "raikhad",
+      "gheekanta",
+      "khadia",
+    ],
+    South: [
+      "maninagar",
+      "ghodasar",
+      "isanpur",
+      "vatva",
+      "narol",
+      "lambha",
+      "khokhra",
+      "amraiwadi",
+    ],
+    North: [
+      "sabarmati",
+      "chandkheda",
+      "motera",
+      "ranip",
+      "kali",
+      "d-cabin",
+      "sughad",
+      "ongc",
+    ],
+    East: [
+      "naroda",
+      "nikol",
+      "odhav",
+      "vastral",
+      "bapunagar",
+      "rakhial",
+      "saraspur",
+      "india colony",
+      "ramol",
+      "hathijan",
+    ],
+    West: [
+      "vejalpur",
+      "ambawadi",
+      "satellite",
+      "vasna",
+      "jivraj park",
+      "shyamal",
+      "prahladnagar",
+      "anandnagar",
+      "juhapura",
+    ],
+    "South West": [
+      "gota",
+      "sola",
+      "thaltej",
+      "bodakdev",
+      "bopal",
+      "ghuma",
+      "science city",
+      "hebatpur",
+      "zundal",
+      "shilaj",
+      "sp ring road",
+      "chandlodiya",
+    ],
+    "North West": [
+      "nava vadaj",
+      "naranpura",
+      "memnagar",
+      "usmanpura",
+      "vadaj",
+      "vastrapur",
+      "navrangpura",
+      "gurukul",
+      "bhuyangdev",
+      "akhbarnagar",
+    ],
+  };
+
+  // Extract all matching zones with their matching area
+  const matches = [];
+
+  for (const [zone, areas] of Object.entries(zoneMap)) {
+    for (const area of areas) {
+      if (lower.includes(area)) {
+        matches.push({ zone, match: area, index: lower.indexOf(area) });
+      }
+    }
+  }
+
+  // Sort by index of match to prefer the earliest occurring area
+  if (matches.length > 0) {
+    matches.sort((a, b) => a.index - b.index);
+    return matches[0].zone;
+  }
+
+  return null;
+};
+
 exports.createIssue = async (req, res) => {
   try {
     const {
@@ -12,6 +119,8 @@ exports.createIssue = async (req, res) => {
       isAnonymous,
     } = req.body;
 
+    const zone = getZoneFromAddress(location?.address); // 🧠 Auto-assign zone
+
     const issue = await Issue.create({
       title,
       description,
@@ -21,6 +130,7 @@ exports.createIssue = async (req, res) => {
       images,
       isAnonymous,
       createdBy: req.user.id,
+      zone, // 👈 Save in DB
     });
 
     res.status(201).json(issue);

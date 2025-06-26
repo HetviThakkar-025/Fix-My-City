@@ -11,6 +11,20 @@ const issueSchema = new mongoose.Schema(
         lng: { type: Number },
       },
     },
+    zone: {
+      type: String,
+      enum: [
+        "North",
+        "South",
+        "East",
+        "West",
+        "Central",
+        "South West",
+        "North West",
+      ], // Ahmedabad zones
+      default: null,
+    },
+
     severity: {
       type: String,
       enum: ["low", "medium", "critical"],

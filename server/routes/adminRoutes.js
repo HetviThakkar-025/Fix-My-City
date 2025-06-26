@@ -7,3 +7,4 @@ router.get("/profile", protect, restrictTo("admin"), (req, res) => {
 });
 
 module.exports = router;
+  

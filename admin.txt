@@ -1,0 +1,33 @@
+admin logs in:
+sees 3 options -->
+dashboard (main ['/']), all reports, ward/zones
+in each:
+
+dashboard page :- shows statistics: (according to 7 zones of ahmedabad)
+Pie/bar charts for issue types, statuses, resolution time,
+Geo heatmaps by ward/zone 
+Weekly/monthly reports export
+feedback, ratings, given by user
+
+all reports page: 
+all reports given by user (report cards like it was in user)
+Filtering options by category, date, severity, status, zone
+Assign/route issue to department either manually or by AI (two options: assign manually/ assign automatically with AI) 
+Auto-Assignment to zones by AI - Use Case: Automatically route the issue to the right city zone based on zones
+- Model: Multi-class text/image classifier - How to Use: Saves admin time by auto-labeling reports.
+two very important features of AI: 
+1.  Duplicate Report Detection - If many users report the same pothole or broken light, detect similar location + 
+text + image + tag - Model: Text similarity model - How to Use: Merge reports and show total votes instead of duplicates.
+2.Priority Prediction from Description
+- Use Case: Based on the user’s description, automatically assign urgency: High, Medium, 
+Low - Model: Text classification - How to Use: Helps admins prioritize which issues to resolve first. 
+
+ward/zones page:
+shows 7 zones - in each zone, shows reports of that zone (Assignment done by admin)
+ward officer has either updated staus or not, shows to admin, 
+if solved then admin sents a notification with resolution time (solved in x hours/days) to that particular user who reported issue
+
+7 ward officers for 7 zones:
+same type of page for every logged in ward officer, sees a homepage showing all reports of his/her zone,
+Filtering options by category, date, severity,
+from his page he changes status of issue to resolved - notification or message send to admin of status
