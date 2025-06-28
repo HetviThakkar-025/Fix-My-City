@@ -11,16 +11,18 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     try {
       const res = await axios.post("/api/auth/login", { email, password });
-      const { token, role } = res.data;
+      const { token, role: userRole } = res.data; // ✅ FIXED HERE
 
       localStorage.setItem("token", token);
-      localStorage.setItem("role", role);
+      localStorage.setItem("role", userRole);
 
-      if (role === "admin") {
+      if (userRole === "admin") {
         navigate("/admin");
+      } else if (userRole.startsWith("ward_")) {
+        navigate("/ward");
       } else {
         navigate("/user");
       }
@@ -86,36 +88,3 @@ function Login() {
 }
 
 export default Login;
-
-// Updated handleLogin with Backend
-
-// const handleLogin = async (e) => {
-//   e.preventDefault();
-//   try {
-//     const res = await axios.post("/api/auth/login", { email, password });
-
-//     const { token, role } = res.data;
-
-//     // Store securely
-//     localStorage.setItem("token", token);
-//     localStorage.setItem("role", role);
-
-//     // Redirect based on role
-//     if (role === "admin") {
-//       navigate("/admin");
-//     } else {
-//       navigate("/user");
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     if (err.response?.status === 401) {
-//       setError("Invalid email or password.");
-//     } else {
-//       setError("Login failed. Please try again later.");
-//     }
-//   }
-// };
-
-// Proxy Setup (if backend is on localhost:5000)
-// In client/package.json:
-// "proxy": "http://localhost:5000"

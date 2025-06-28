@@ -2,9 +2,13 @@ import { Navigate } from "react-router-dom";
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
+  const userRole = localStorage.getItem("role");
 
-  if (!token || role !== allowedRole) {
+  const isAllowed =
+    userRole === allowedRole ||
+    (allowedRole === "ward_officer" && userRole?.startsWith("ward_"));
+
+  if (!token || !isAllowed) {
     return <Navigate to="/login" replace />;
   }
 

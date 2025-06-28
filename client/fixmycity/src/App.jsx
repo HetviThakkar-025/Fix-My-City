@@ -19,6 +19,8 @@ import AdminDashboard from "./pages/admin/Dashboard";
 import AllReports from "./pages/admin/AllReports";
 import WardZones from "./pages/admin/WardZones";
 
+import WardDashboard from "./pages/wards/WardOfficerDashboard";
+
 import ProtectedRoute from "./components/common/ProtectedRoute";
 
 function App() {
@@ -57,6 +59,16 @@ function App() {
           <Route path="allreports" element={<AllReports />} />
           <Route path="zones" element={<WardZones />} />
         </Route>
+
+        {/* Protected Ward Officer Route */}
+        <Route
+          path="/ward"
+          element={
+            <ProtectedRoute allowedRole="ward_officer">
+              <WardDashboard />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Catch-All Route */}
         <Route path="*" element={<Navigate to="/login" />} />

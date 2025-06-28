@@ -104,6 +104,17 @@ function Register() {
             >
               <option value="user">Citizen</option>
               <option value="admin">Administrator</option>
+              <option value="ward_north">Ward Officer - North Zone</option>
+              <option value="ward_south">Ward Officer - South Zone</option>
+              <option value="ward_east">Ward Officer - East Zone</option>
+              <option value="ward_west">Ward Officer - West Zone</option>
+              <option value="ward_central">Ward Officer - Central Zone</option>
+              <option value="ward_northwest">
+                Ward Officer - North West Zone
+              </option>
+              <option value="ward_southwest">
+                Ward Officer - South West Zone
+              </option>
             </select>
           </div>
 
@@ -127,13 +138,3 @@ function Register() {
 }
 
 export default Register;
-
-// Replace the client-side mock with
-
-// const res = await axios.post("/api/auth/register", {
-//   name,
-//   email,
-//   password,
-//   role,
-// });
-// const { token, role } = res.data;
