@@ -49,7 +49,7 @@ export default function IssuesChart() {
                 "East",
                 "North",
                 "South",
-                "New West",
+                "North West",
                 "South West",
               ],
               datasets: [
