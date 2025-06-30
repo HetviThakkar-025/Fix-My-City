@@ -38,13 +38,22 @@ export default function AnnouncementList() {
               <div className="flex justify-between items-start">
                 <h3 className="font-bold">{announcement.title}</h3>
                 <span className="text-sm text-gray-500">
-                  {new Date(announcement.createdAt).toLocaleDateString()}
+                  {announcement.createdAt
+                    ? new Date(announcement.createdAt).toLocaleDateString(
+                        "en-US",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )
+                    : "Unknown date"}
                 </span>
               </div>
               <p className="mt-2">{announcement.content}</p>
               {announcement.resolvedReports && (
                 <div className="mt-3">
-                  <p className="text-sm font-semibold">Recently resolved:</p>
+                  <p className="text-sm font-semibold">Recently resolved</p>
                   <ul className="list-disc pl-5 text-sm">
                     {announcement.resolvedReports.map((report) => (
                       <li key={report._id}>{report.title}</li>

@@ -1,5 +1,7 @@
 const Issue = require("../models/Issue");
 const Feedback = require("../models/Feedback");
+const Notification = require("../models/Notification");
+const User = require("../models/User");
 
 exports.getAdminDashboardData = async (req, res) => {
   try {
@@ -82,10 +84,9 @@ exports.getAllReports = async (req, res) => {
   }
 };
 
+// Get all issues grouped by zone
 exports.getZoneWiseReports = async (req, res) => {
   try {
-    const issues = await Issue.find().sort({ createdAt: -1 }).lean();
-
     const zones = [
       "North",
       "South",
@@ -96,10 +97,12 @@ exports.getZoneWiseReports = async (req, res) => {
       "North West",
     ];
 
+    const issues = await Issue.find().populate("user").sort({ createdAt: -1 });
     const grouped = {};
-    for (const zone of zones) {
+
+    zones.forEach((zone) => {
       grouped[zone] = issues.filter((i) => i.zone === zone);
-    }
+    });
 
     res.json(grouped);
   } catch (err) {
@@ -108,30 +111,57 @@ exports.getZoneWiseReports = async (req, res) => {
   }
 };
 
-// Mark report as resolved with resolution time
+// Mark issue resolved by admin + notify user
 exports.markZoneReportResolved = async (req, res) => {
   try {
     const { id } = req.params;
     const { resolutionTime, resolvedBy } = req.body;
 
-    const updated = await Issue.findByIdAndUpdate(
-      id,
-      {
-        status: "resolved",
-        resolutionTime,
-        resolvedBy,
-        resolvedAt: new Date(),
-      },
-      { new: true }
-    );
+    const issue = await Issue.findById(id).populate("user");
+    if (!issue) return res.status(404).json({ message: "Issue not found" });
 
-    if (!updated) {
-      return res.status(404).json({ message: "Report not found" });
-    }
+    issue.status = "resolved";
+    issue.resolutionTime = resolutionTime;
+    issue.resolvedBy = resolvedBy;
+    issue.resolvedAt = new Date();
+    await issue.save();
 
-    res.json({ message: "Report marked as resolved", report: updated });
+    // Admin notifies the user who reported it
+    await Notification.create({
+      user: issue.user._id,
+      type: "resolution",
+      message: `Your report (ID: ${issue._id}) has been resolved by Admin. Resolution Time: ${resolutionTime}.`,
+    });
+
+    res.json({
+      message: "Marked as resolved and user notified.",
+      report: issue,
+    });
   } catch (err) {
     console.error("Error in markZoneReportResolved:", err);
-    res.status(500).json({ message: "Failed to update report" });
+    res.status(500).json({ message: "Failed to resolve issue" });
+  }
+};
+
+// Simulated Officer Update from Zone Officer -> Notify Admin
+exports.notifyAdminFromOfficer = async (req, res) => {
+  try {
+    const { zone, reportId, officer, status } = req.body;
+
+    // Notify admin (assuming single admin user or admin role filter)
+    const admins = await User.find({ role: "admin" });
+
+    const adminNotifications = admins.map((admin) => ({
+      user: admin._id,
+      type: "officer_update",
+      message: `Officer ${officer} updated status for report #${reportId} in ${zone}. New status: ${status}`,
+    }));
+
+    await Notification.insertMany(adminNotifications);
+
+    res.json({ message: "Admin notified about officer update." });
+  } catch (err) {
+    console.error("Error notifying admin:", err);
+    res.status(500).json({ message: "Internal server error" });
   }
 };

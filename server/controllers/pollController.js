@@ -48,3 +48,22 @@ exports.votePoll = async (req, res) => {
     res.status(500).json({ message: "Failed to vote" });
   }
 };
+
+exports.getPollsForAdmin = async (req, res) => {
+  try {
+    const polls = await Poll.find().sort({ createdAt: -1 });
+    res.status(200).json(polls);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch polls for admin" });
+  }
+};
+
+exports.deletePoll = async (req, res) => {
+  try {
+    const pollId = req.params.id;
+    await Poll.findByIdAndDelete(pollId);
+    res.status(200).json({ message: "Poll deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete poll" });
+  }
+};

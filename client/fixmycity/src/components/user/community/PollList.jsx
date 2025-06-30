@@ -46,7 +46,7 @@ export default function PollList() {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Community Polls</h3>
+      <h3 className="text-xl font-bold">Community Polls</h3>
       {loading ? (
         <p>Loading polls...</p>
       ) : (

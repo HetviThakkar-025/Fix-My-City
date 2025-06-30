@@ -11,6 +11,7 @@ const issueSchema = new mongoose.Schema(
         lng: { type: Number },
       },
     },
+
     zone: {
       type: String,
       enum: [
@@ -33,12 +34,28 @@ const issueSchema = new mongoose.Schema(
     tags: [{ type: String }],
     images: [{ type: String }],
     isAnonymous: { type: Boolean, default: false },
+
     status: {
       type: String,
       enum: ["open", "in_progress", "resolved"],
       default: "open",
     },
+
+    resolutionTime: {
+      type: String,
+      default: "",
+    },
+    resolvedBy: {
+      type: String, // can be officer/admin name
+      default: "",
+    },
+    resolvedAt: {
+      type: Date,
+      default: null,
+    },
+
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    
     upvotes: {
       type: Number,
       default: 0,
