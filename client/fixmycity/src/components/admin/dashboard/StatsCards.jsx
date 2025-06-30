@@ -1,15 +1,35 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function StatsCards({ selectedZone, onZoneChange }) {
-  // Mock data - replace with real API data
-  const stats = {
-    totalReports: 1243,
-    resolved: 876,
-    inProgress: 234,
-    pending: 133,
-    avgResolutionTime: "2.3 days",
-    satisfactionRating: "4.2/5",
-  };
+  const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("/api/admin/dashboard", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setStats(res.data);
+      } catch (err) {
+        console.error("Error fetching dashboard stats:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  if (loading) {
+    return <div>Loading dashboard stats...</div>;
+  }
+
+  if (!stats) {
+    return <div>No dashboard stats available.</div>;
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
@@ -35,7 +55,7 @@ export default function StatsCards({ selectedZone, onZoneChange }) {
 
       <div className="bg-white p-4 rounded-lg shadow-sm border-t-4 border-indigo-500">
         <p className="text-gray-500 text-sm">Avg. Resolution</p>
-        <p className="text-2xl font-bold">{stats.avgResolutionTime}</p>
+        <p className="text-2xl font-bold">{stats.avgResolutionTime || "N/A"}</p>
       </div>
     </div>
   );

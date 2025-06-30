@@ -26,7 +26,7 @@ exports.getAdminDashboardData = async (req, res) => {
     };
 
     for (let issue of issues) {
-      const tags = issue.tags.map((tag) => tag.toLowerCase());
+      const tags = issue.tags.map((tag) => tag.toLowerCase().replace(/^#/, ""));
       if (tags.includes("pothole")) categoryCounts.Potholes++;
       else if (tags.includes("garbage")) categoryCounts.Garbage++;
       else if (tags.includes("light") || tags.includes("street light"))

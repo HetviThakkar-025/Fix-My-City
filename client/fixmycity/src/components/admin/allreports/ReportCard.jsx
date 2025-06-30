@@ -12,8 +12,8 @@ export default function ReportCard({ report, onAssign }) {
 
   const getSeverityStyle = (severity) => {
     switch (severity) {
-      case "high":
-        return "bg-red-100 text-red-800";
+      case "critical":
+        return "bg-red-200 text-red-900";
       case "medium":
         return "bg-orange-100 text-orange-800";
       default:

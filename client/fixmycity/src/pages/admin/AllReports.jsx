@@ -1,62 +1,64 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Filters from "../../components/admin/allreports/Filters";
 import ReportCard from "../../components/admin/allreports/ReportCard";
 import ExportButton from "../../components/admin/allreports/ExportButton";
 
 export default function AllReports() {
-  const [reports, setReports] = useState([
-    {
-      id: 1001,
-      title: "Large pothole on main road",
-      description: "There is a very deep pothole causing traffic jams.",
-      category: "Pothole",
-      zone: "Central Zone",
-      severity: "high",
-      status: "Pending",
-      assignedZone: "",
-      createdAt: new Date("2023-06-15"),
-    },
-    {
-      id: 1002,
-      title: "Street light broken",
-      description: "Light not working at night near community park.",
-      category: "Street Lights",
-      zone: "East Zone",
-      severity: "medium",
-      status: "Pending",
-      assignedZone: "",
-      createdAt: new Date("2023-06-16"),
-    },
-    {
-      id: 1003,
-      title: "Garbage not collected",
-      description: "Trash hasn't been picked up for 3 days.",
-      category: "Garbage",
-      zone: "West Zone",
-      severity: "low",
-      status: "In Progress",
-      assignedZone: "West Zone",
-      createdAt: new Date("2023-06-14"),
-    },
-    {
-      id: 1004,
-      title: "Water leakage",
-      description: "Pipe burst near the market area.",
-      category: "Water",
-      zone: "North Zone",
-      severity: "high",
-      status: "Resolved",
-      assignedZone: "North Zone",
-      createdAt: new Date("2023-06-10"),
-    },
-  ]);
-
+  const [reports, setReports] = useState([]);
   const [filters, setFilters] = useState({
     status: "All",
     zone: "All",
     category: "All",
     severity: "All",
   });
+
+  // 🔁 Fetch reports from backend
+  useEffect(() => {
+    const fetchReports = async () => {
+      try {
+        const res = await axios.get("/api/admin/reports", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        // Transform tags → category for filters
+        const formatted = res.data.map((r) => ({
+          id: r._id,
+          title: r.title,
+          description: r.description,
+          category: getCategoryFromTags(r.tags),
+          zone: r.zone || "Unknown",
+          severity: r.severity,
+          status: mapStatus(r.status),
+          assignedZone: r.zone || "",
+          createdAt: new Date(r.createdAt),
+        }));
+
+        setReports(formatted);
+      } catch (err) {
+        console.error("Failed to fetch reports:", err);
+      }
+    };
+
+    fetchReports();
+  }, []);
+
+  const getCategoryFromTags = (tags = []) => {
+    const lowerTags = tags.map((t) => t.toLowerCase());
+    if (lowerTags.some((t) => t.includes("pothole"))) return "Pothole";
+    if (lowerTags.some((t) => t.includes("garbage"))) return "Garbage";
+    if (lowerTags.some((t) => t.includes("light"))) return "Street Lights";
+    if (lowerTags.some((t) => t.includes("water"))) return "Water";
+    return "Others";
+  };
+
+  const mapStatus = (s) => {
+    if (s === "resolved") return "Resolved";
+    if (s === "in_progress") return "In Progress";
+    return "Pending";
+  };
 
   const handleFilterChange = (key, value) => {
     setFilters((prev) => ({ ...prev, [key]: value }));
@@ -65,31 +67,37 @@ export default function AllReports() {
   const filteredReports = reports.filter((report) => {
     return (
       (filters.status === "All" || report.status === filters.status) &&
-      (filters.zone === "All" || report.zone.includes(filters.zone)) &&
+      (filters.zone === "All" || report.zone === filters.zone) &&
       (filters.category === "All" || report.category === filters.category) &&
       (filters.severity === "All" ||
-        report.severity === filters.severity.toLowerCase())
+        report.severity.toLowerCase() === filters.severity.toLowerCase())
     );
   });
 
-  const handleAssign = (reportId, zone) => {
-    setReports((prev) =>
-      prev.map((r) =>
-        r.id === reportId
-          ? { ...r, assignedZone: zone, status: "In Progress" }
-          : r
-      )
-    );
+  // ✅ Simulate assignment (future: hit backend here)
+  const handleAssign = async (reportId, zone) => {
+    try {
+      // Optional: call backend to assign
+      // await axios.put(`/api/admin/assign/${reportId}`, { zone })
+
+      setReports((prev) =>
+        prev.map((r) =>
+          r.id === reportId
+            ? { ...r, assignedZone: zone, status: "In Progress" }
+            : r
+        )
+      );
+    } catch (err) {
+      console.error("Assignment failed:", err);
+    }
   };
 
   const handleDuplicateDetection = () => {
-    console.log("🔍 Detecting duplicates...");
-    alert("Duplicate detection will be handled here (ML)");
+    alert("🔍 Duplicate detection via ML (future)");
   };
 
   const handlePriorityPrediction = () => {
-    console.log("⚙️ Predicting priority...");
-    alert("Priority prediction will be handled here (ML)");
+    alert("⚙️ Priority prediction via ML (future)");
   };
 
   return (
@@ -100,13 +108,13 @@ export default function AllReports() {
           <ExportButton reports={filteredReports} />
           <button
             onClick={handleDuplicateDetection}
-            className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+            className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded text-sm font-medium"
           >
             Detect Duplicates (AI)
           </button>
           <button
             onClick={handlePriorityPrediction}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium transition-colors"
+            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium"
           >
             Predict Priority (AI)
           </button>

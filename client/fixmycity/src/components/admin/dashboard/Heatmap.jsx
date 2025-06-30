@@ -1,45 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-
-// ✅ VALID GEOJSON MOCK DATA
-const zonesGeoJSON = {
-  type: "FeatureCollection",
-  features: [
-    {
-      type: "Feature",
-      properties: { name: "Central Zone", reports: 120 },
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [72.5714, 23.03],
-            [72.58, 23.03],
-            [72.58, 23.04],
-            [72.5714, 23.04],
-            [72.5714, 23.03],
-          ],
-        ],
-      },
-    },
-    {
-      type: "Feature",
-      properties: { name: "East Zone", reports: 80 },
-      geometry: {
-        type: "Polygon",
-        coordinates: [
-          [
-            [72.59, 23.03],
-            [72.6, 23.03],
-            [72.6, 23.04],
-            [72.59, 23.04],
-            [72.59, 23.03],
-          ],
-        ],
-      },
-    },
-  ],
-};
+import axios from "axios";
 
 const getColor = (count) => {
   return count > 150
@@ -52,19 +14,60 @@ const getColor = (count) => {
 };
 
 export default function Heatmap() {
+  const [features, setFeatures] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Step 1: Get dashboard stats from backend (zoneCounts)
+        const statsRes = await axios.get("/api/admin/dashboard", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const { zoneCounts } = statsRes.data;
+
+        // Step 2: Load the .geojson file from public folder
+        const geoRes = await fetch("/data/ahmedabad_zones.geojson");
+        const geoData = await geoRes.json();
+
+        // Step 3: Inject report counts into each zone feature
+        const enrichedFeatures = geoData.features.map((feature) => {
+          const zoneName = feature.properties.zone;
+          const reports = zoneCounts[zoneName] || 0;
+          return {
+            ...feature,
+            properties: {
+              ...feature.properties,
+              reports,
+            },
+          };
+        });
+
+        setFeatures(enrichedFeatures);
+      } catch (err) {
+        console.error("Error loading heatmap data:", err);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
       <h3 className="font-medium mb-4">Reports Heatmap by Zone</h3>
       <div className="h-96">
         <MapContainer
-          center={[23.035, 72.585]} // Ahmedabad area
-          zoom={13}
+          center={[23.035, 72.585]}
+          zoom={12}
           style={{ height: "100%", width: "100%" }}
         >
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {zonesGeoJSON.features.map((zone, index) => (
+
+          {features.map((zone, idx) => (
             <GeoJSON
-              key={zone.properties.name + index}
+              key={zone.properties.zone + idx}
               data={zone}
               style={() => ({
                 fillColor: getColor(zone.properties.reports),
@@ -75,7 +78,7 @@ export default function Heatmap() {
               })}
               onEachFeature={(feature, layer) => {
                 layer.bindPopup(
-                  `<b>${feature.properties.name}</b><br>${feature.properties.reports} reports`
+                  `<b>${feature.properties.zone}</b><br>${feature.properties.reports} reports`
                 );
               }}
             />

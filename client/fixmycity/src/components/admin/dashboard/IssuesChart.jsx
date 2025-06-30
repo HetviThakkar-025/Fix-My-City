@@ -1,14 +1,50 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar, Pie } from "react-chartjs-2";
 import { Chart as ChartJS } from "chart.js/auto";
+import axios from "axios";
 
 export default function IssuesChart() {
-  // Mock data
+  const [categoryCounts, setCategoryCounts] = useState({});
+  const [statusCounts, setStatusCounts] = useState({
+    resolved: 0,
+    inProgress: 0,
+    pending: 0,
+  });
+  const [zoneCounts, setZoneCounts] = useState({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const res = await axios.get("/api/admin/dashboard", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        setCategoryCounts(res.data.categoryCounts || {});
+        setStatusCounts({
+          resolved: res.data.resolved || 0,
+          inProgress: res.data.inProgress || 0,
+          pending: res.data.pending || 0,
+        });
+        setZoneCounts(res.data.zoneCounts || {});
+      } catch (err) {
+        console.error("Error fetching chart data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
+
+  if (loading) return <div>Loading chart data...</div>;
+
   const issuesByType = {
-    labels: ["Potholes", "Street Lights", "Garbage", "Water Leaks", "Others"],
+    labels: Object.keys(categoryCounts),
     datasets: [
       {
-        data: [320, 190, 280, 200, 110],
+        data: Object.values(categoryCounts),
         backgroundColor: [
           "#3B82F6",
           "#10B981",
@@ -24,7 +60,12 @@ export default function IssuesChart() {
     labels: ["Resolved", "In Progress", "Pending"],
     datasets: [
       {
-        data: [45, 30, 25],
+        label: "Issues by Status",
+        data: [
+          statusCounts.resolved,
+          statusCounts.inProgress,
+          statusCounts.pending,
+        ],
         backgroundColor: ["#10B981", "#3B82F6", "#F59E0B"],
       },
     ],
@@ -42,24 +83,7 @@ export default function IssuesChart() {
         <h3 className="font-medium mb-4">Issues by Status</h3>
         <div className="h-64">
           <Bar
-            data={{
-              labels: [
-                "Central",
-                "West",
-                "East",
-                "North",
-                "South",
-                "North West",
-                "South West",
-              ],
-              datasets: [
-                {
-                  label: "Reports by Zone",
-                  data: [120, 190, 90, 140, 200, 170, 150],
-                  backgroundColor: "#3B82F6",
-                },
-              ],
-            }}
+            data={issuesByStatus}
             options={{
               responsive: true,
               maintainAspectRatio: false,

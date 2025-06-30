@@ -1,18 +1,18 @@
 export default function Filters({ filters, onChange }) {
   const zones = [
     "All",
-    "Central Zone",
-    "West Zone",
-    "East Zone",
-    "North Zone",
-    "South Zone",
-    "North West Zone",
-    "South West Zone",
+    "North",
+    "South",
+    "East",
+    "West",
+    "Central",
+    "South West",
+    "North West",
   ];
 
   const statuses = ["All", "Pending", "In Progress", "Resolved"];
   const categories = ["All", "Pothole", "Street Lights", "Garbage", "Water"];
-  const severities = ["All", "High", "Medium", "Low"];
+  const severities = ["All", "Critical", "Medium", "Low"];
 
   return (
     <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
