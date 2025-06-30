@@ -18,6 +18,7 @@ import AdminLayout from "./layout/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AllReports from "./pages/admin/AllReports";
 import WardZones from "./pages/admin/WardZones";
+import AdminCommunityPage from "./pages/admin/AdminCommunityPage";
 
 import WardDashboard from "./pages/wards/WardOfficerDashboard";
 
@@ -58,6 +59,7 @@ function App() {
           <Route index element={<AdminDashboard />} />
           <Route path="allreports" element={<AllReports />} />
           <Route path="zones" element={<WardZones />} />
+          <Route path="community_admin" element={<AdminCommunityPage />} />
         </Route>
 
         {/* Protected Ward Officer Route */}

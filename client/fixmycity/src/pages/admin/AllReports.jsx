@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import Filters from "../../components/admin/dashboard/Filters";
-import ReportCard from "../../components/admin/dashboard/ReportCard";
-import ExportButton from "../../components/admin/dashboard/ExportButton";
+import Filters from "../../components/admin/allreports/Filters";
+import ReportCard from "../../components/admin/allreports/ReportCard";
+import ExportButton from "../../components/admin/allreports/ExportButton";
 
 export default function AllReports() {
   const [reports, setReports] = useState([
