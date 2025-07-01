@@ -117,7 +117,7 @@ exports.markZoneReportResolved = async (req, res) => {
     const { id } = req.params;
     const { resolutionTime, resolvedBy } = req.body;
 
-    const issue = await Issue.findById(id).populate("user");
+    const issue = await Issue.findById(id).populate("createdBy");
     if (!issue) return res.status(404).json({ message: "Issue not found" });
 
     issue.status = "resolved";
@@ -126,11 +126,11 @@ exports.markZoneReportResolved = async (req, res) => {
     issue.resolvedAt = new Date();
     await issue.save();
 
-    // Admin notifies the user who reported it
+    // Notify the user who reported it
     await Notification.create({
-      user: issue.user._id,
+      user: issue.createdBy._id,
       type: "resolution",
-      message: `Your report (ID: ${issue._id}) has been resolved by Admin. Resolution Time: ${resolutionTime}.`,
+      message: `Your report (ID: ${issue._id}) titled "${issue.title}" has been resolved by Admin in ${resolutionTime}.`,
     });
 
     res.json({
