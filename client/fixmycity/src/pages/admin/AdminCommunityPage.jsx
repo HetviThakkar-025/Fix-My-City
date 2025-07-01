@@ -25,44 +25,6 @@ const AdminCommunityPage = () => {
     resolvedReports: [],
   });
 
-  useEffect(() => {
-    // MOCK POLL DATA for UI testing
-    const mockPolls = [
-      {
-        _id: "1",
-        question: "Should we install more street lights in Zone 4?",
-        options: [
-          { text: "Yes", votes: 25 },
-          { text: "No", votes: 5 },
-          { text: "Neutral", votes: 2 },
-        ],
-        totalVotes: 32,
-      },
-      {
-        _id: "2",
-        question: "Do you support building a new public park in Zone 2?",
-        options: [
-          { text: "Yes", votes: 40 },
-          { text: "No", votes: 10 },
-        ],
-        totalVotes: 50,
-      },
-      {
-        _id: "3",
-        question: "Which issue should the municipality prioritize next?",
-        options: [
-          { text: "Road Repair", votes: 30 },
-          { text: "Water Supply", votes: 20 },
-          { text: "Waste Management", votes: 15 },
-        ],
-        totalVotes: 65,
-      },
-    ];
-
-    setPolls(mockPolls);
-    setLoadingPolls(false);
-  }, []);
-
   // Fetch polls with admin privileges
   useEffect(() => {
     const fetchPolls = async () => {
