@@ -12,6 +12,7 @@ const pollRoutes = require("./routes/pollRoutes");
 const announcementRoutes = require("./routes/announcementRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const wardReportRoutes = require("./routes/wardRoutes");
 
 const app = express();
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use("/api/polls", pollRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/ward", wardReportRoutes);
 
 // Connect to MongoDB Atlas
 connectDB();

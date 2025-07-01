@@ -9,7 +9,6 @@ import {
   FiChevronDown,
   FiMessageSquare,
   FiUser,
-  FiPhone,
   FiMap,
 } from "react-icons/fi";
 
@@ -26,9 +25,8 @@ const WardOfficerDashboard = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [notification, setNotification] = useState(null);
 
-  //  Determine zone and name after login
   useEffect(() => {
-    const role = localStorage.getItem("role"); // e.g., "ward_east"
+    const role = localStorage.getItem("role");
     if (role?.startsWith("ward_")) {
       const zone =
         role.split("_")[1].charAt(0).toUpperCase() +
@@ -39,242 +37,94 @@ const WardOfficerDashboard = () => {
     }
   }, []);
 
-  // Mock data - in real app this would come from API
-  const allZoneReports = {
-    "Central Zone": [
-      {
-        id: 1001,
-        title: "Pothole near Central Park",
-        status: "Resolved",
-        resolvedBy: "Officer A",
-        resolutionTime: "2 days",
-        createdAt: new Date("2023-06-25"),
-        severity: "high",
-        category: "Road",
-        location: "Near Main Square",
-      },
-      {
-        id: 1002,
-        title: "Broken street light on 5th Ave",
-        status: "Pending",
-        resolvedBy: "",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-28"),
-        severity: "medium",
-        category: "Electricity",
-        location: "5th Avenue",
-      },
-    ],
-    "North Zone": [
-      {
-        id: 2001,
-        title: "Garbage accumulation near market",
-        status: "In Progress",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "high",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-      {
-        id: 3001,
-        title: "Garbage accumulation near market",
-        status: "Resolved",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "low",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-    ],
-    "East Zone": [
-      {
-        id: 4001,
-        title: "Garbage accumulation near market",
-        status: "In Progress",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "high",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-      {
-        id: 3009,
-        title: "Garbage accumulation near market",
-        status: "Resolved",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "low",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-    ],
-    "West Zone": [
-      {
-        id: 4701,
-        title: "Garbage accumulation near market",
-        status: "In Progress",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "high",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-      {
-        id: 3059,
-        title: "Garbage accumulation near market",
-        status: "Resolved",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "low",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-    ],
-    "South Zone": [
-      {
-        id: 4081,
-        title: "Garbage accumulation near market",
-        status: "In Progress",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "high",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-      {
-        id: 3006,
-        title: "Garbage accumulation near market",
-        status: "Resolved",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "low",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-    ],
-    "Northwest Zone": [
-      {
-        id: 6001,
-        title: "Garbage accumulation near market",
-        status: "In Progress",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "high",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-      {
-        id: 3005,
-        title: "Garbage accumulation near market",
-        status: "Resolved",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "low",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-    ],
-    "Southwest Zone": [
-      {
-        id: 6129,
-        title: "Garbage accumulation near market",
-        status: "In Progress",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "high",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-      {
-        id: 4540,
-        title: "Garbage accumulation near market",
-        status: "Resolved",
-        resolvedBy: "Officer B",
-        resolutionTime: "",
-        createdAt: new Date("2023-06-27"),
-        severity: "low",
-        category: "Sanitation",
-        location: "North Market Area",
-      },
-    ],
-  };
-
   useEffect(() => {
-    if (!officerZone) return;
+    const fetchZoneReports = async () => {
+      const res = await fetch("/api/ward/reports", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await res.json();
+      setReports(data); // Store all reports, including resolved
+    };
 
-    const zoneReports = allZoneReports[officerZone] || [];
-
-    const filtered = zoneReports.filter((report) => {
-      return (
-        (filters.status === "all" || report.status === filters.status) &&
-        (filters.severity === "all" || report.severity === filters.severity) &&
-        (filters.dateRange === "all" ||
-          (filters.dateRange === "week" && isWithinWeek(report.createdAt)))
-      );
-    });
-
-    setReports(filtered);
-  }, [officerZone, filters]);
+    if (officerZone) fetchZoneReports();
+  }, [officerZone]);
 
   const isWithinWeek = (date) => {
     const oneWeekAgo = new Date();
     oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    return date > oneWeekAgo;
+    return new Date(date) > oneWeekAgo;
   };
 
-  const handleStatusUpdate = (reportId, newStatus) => {
-    const updatedReports = reports.map((report) =>
-      report.id === reportId
-        ? {
-            ...report,
-            status: newStatus,
-            resolvedBy: officerName,
-            resolutionTime: newStatus === "Resolved" ? "0 days" : "",
-          }
-        : report
+  const activeReports = reports.filter(
+    (r) => r.status.toLowerCase() !== "resolved"
+  );
+
+  const filteredReports = activeReports.filter((report) => {
+    return (
+      (filters.status === "all" || report.status === filters.status) &&
+      (filters.severity === "all" || report.severity === filters.severity) &&
+      (filters.dateRange === "all" ||
+        (filters.dateRange === "week" && isWithinWeek(report.createdAt)))
     );
+  });
 
-    setReports(updatedReports);
+  const handleStatusUpdate = async (reportId, newStatus) => {
+    const notes = resolutionNotes[reportId] || "";
 
-    // Notify admin
-    const report = reports.find((r) => r.id === reportId);
-    sendNotificationToAdmin({
-      type: "STATUS_UPDATE",
-      zone: officerZone,
-      reportId,
-      officer: officerName,
-      newStatus,
-      reportTitle: report.title,
-      notes: resolutionNotes[reportId] || "",
-    });
+    try {
+      const res = await fetch(`/api/ward/reports/${reportId}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ status: newStatus, notes }),
+      });
 
-    setNotification({
-      type: "success",
-      message: "Status updated and admin notified",
-    });
+      const result = await res.json();
+
+      if (res.ok) {
+        if (newStatus.toLowerCase() === "resolved") {
+          // Remove resolved report
+          setReports((prev) => prev.filter((r) => r._id !== reportId));
+        } else {
+          // Update report status
+          setReports((prev) =>
+            prev.map((r) =>
+              r._id === reportId
+                ? {
+                    ...r,
+                    status: newStatus,
+                    resolvedBy: officerName,
+                    resolutionNotes: notes,
+                    resolutionTime: new Date().toISOString(),
+                  }
+                : r
+            )
+          );
+        }
+
+        setNotification({
+          type: "success",
+          message: result.message || "Status updated and admin notified",
+        });
+      } else {
+        throw new Error(result.error || "Failed to update status");
+      }
+    } catch (err) {
+      setNotification({
+        type: "error",
+        message: err.message || "Something went wrong",
+      });
+    }
 
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const sendNotificationToAdmin = (data) => {
-    console.log("Notification to admin:", data);
-  };
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 bg-gray-50 min-h-screen">
-      {/* Header Section */}
       <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
         <div className="flex justify-between items-start">
           <div>
@@ -297,7 +147,6 @@ const WardOfficerDashboard = () => {
               </span>
             </div>
           </div>
-
           <button
             onClick={() => setShowFilters(!showFilters)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -322,7 +171,6 @@ const WardOfficerDashboard = () => {
         </div>
       )}
 
-      {/* Filters Panel */}
       {showFilters && (
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-6">
           <h3 className="font-medium text-lg mb-4 text-gray-800">
@@ -341,12 +189,11 @@ const WardOfficerDashboard = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="all">All Statuses</option>
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Resolved">Resolved</option>
+                <option value="open">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Severity
@@ -359,12 +206,11 @@ const WardOfficerDashboard = () => {
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="all">All Severities</option>
-                <option value="high">High</option>
+                <option value="critical">Critical</option>
                 <option value="medium">Medium</option>
                 <option value="low">Low</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Date Range
@@ -384,46 +230,48 @@ const WardOfficerDashboard = () => {
         </div>
       )}
 
-      {/* Reports List */}
       <div className="space-y-4">
-        {reports.length > 0 ? (
-          reports.map((report) => (
+        {filteredReports.length > 0 ? (
+          filteredReports.map((report) => (
             <div
-              key={report.id}
+              key={report._id}
               className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
             >
               <div className="p-6">
-                {/* Report Header */}
                 <div className="flex justify-between items-start">
                   <div>
                     <div className="flex items-center gap-3">
                       <h3 className="text-lg font-semibold text-gray-900">
-                        #{report.id} - {report.title}
+                        #{report._id.slice(-4)} - {report.title}
                       </h3>
                       {report.severity === "high" && (
                         <span className="inline-flex items-center gap-1 bg-red-100 text-red-800 px-2 py-1 rounded-full text-xs">
-                          <FiAlertCircle size={12} />
-                          High Priority
+                          <FiAlertCircle size={12} /> High Priority
                         </span>
                       )}
                     </div>
-
                     <div className="flex flex-wrap gap-4 mt-3 text-sm">
                       <div className="flex items-center gap-1 text-gray-600">
                         <FiCalendar size={14} />
-                        Reported: {report.createdAt.toLocaleDateString()}
+                        Reported:{" "}
+                        {new Date(report.createdAt).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-1 text-gray-600">
                         <FiMap size={14} />
-                        {report.location}
+                        {report.location?.address || "Unknown Location"}
                       </div>
+                    </div>
+                    <div className="flex flex-wrap gap-4 mt-3 text-sm">
                       <div className="text-gray-600">
                         Category:{" "}
-                        <span className="font-medium">{report.category}</span>
+                        <span className="font-medium">{report.title}</span>
+                      </div>
+                      <div className="text-gray-600">
+                        Status:{" "}
+                        <span className="font-medium">{report.status}</span>
                       </div>
                     </div>
                   </div>
-
                   <span
                     className={`px-3 py-1 rounded-full flex items-center gap-1 text-sm font-medium ${
                       report.status === "Resolved"
@@ -442,7 +290,6 @@ const WardOfficerDashboard = () => {
                   </span>
                 </div>
 
-                {/* Report Actions */}
                 <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -451,13 +298,13 @@ const WardOfficerDashboard = () => {
                     <select
                       value={report.status}
                       onChange={(e) =>
-                        handleStatusUpdate(report.id, e.target.value)
+                        handleStatusUpdate(report._id, e.target.value)
                       }
                       className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     >
-                      <option value="Pending">Pending</option>
-                      <option value="In Progress">In Progress</option>
-                      <option value="Resolved">Resolved</option>
+                      <option value="open">Pending</option>
+                      <option value="in_progress">In Progress</option>
+                      <option value="resolved">Resolved</option>
                     </select>
                   </div>
 
@@ -468,11 +315,11 @@ const WardOfficerDashboard = () => {
                     <input
                       type="text"
                       placeholder="Add your notes here..."
-                      value={resolutionNotes[report.id] || ""}
+                      value={resolutionNotes[report._id] || ""}
                       onChange={(e) =>
                         setResolutionNotes({
                           ...resolutionNotes,
-                          [report.id]: e.target.value,
+                          [report._id]: e.target.value,
                         })
                       }
                       className="w-full p-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
@@ -481,13 +328,10 @@ const WardOfficerDashboard = () => {
 
                   <div className="flex items-end">
                     <button
-                      onClick={() => {
-                        handleStatusUpdate(report.id, "Resolved");
-                      }}
+                      onClick={() => handleStatusUpdate(report._id, "Resolved")}
                       className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
                     >
-                      <FiMessageSquare size={16} />
-                      Notify Admin
+                      <FiMessageSquare size={16} /> Notify Admin
                     </button>
                   </div>
                 </div>

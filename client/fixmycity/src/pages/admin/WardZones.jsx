@@ -69,31 +69,33 @@ export default function WardZones() {
     fetchReports();
   }, []);
 
-  // Simulate real-time officer update notifications
+  // Load real notifications from backend for logged-in admin
   useEffect(() => {
-    const interval = setInterval(() => {
-      const zonesWithReports = Object.keys(zoneReports).filter(
-        (zone) => zoneReports[zone].length > 0
-      );
-      if (zonesWithReports.length > 0 && Math.random() > 0.7) {
-        const z =
-          zonesWithReports[Math.floor(Math.random() * zonesWithReports.length)];
-        const r =
-          zoneReports[z][Math.floor(Math.random() * zoneReports[z].length)];
-        if (r.resolvedBy) {
-          addNotification({
-            id: Date.now(),
-            zone: z,
-            reportId: r.id,
-            message: `Officer ${r.resolvedBy} updated report #${r.id}`,
-            timestamp: new Date(),
-            read: false,
-          });
-        }
+    const fetchAdminNotifications = async () => {
+      try {
+        const res = await axios.get("/api/notifications", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+
+        const formatted = res.data.map((n) => ({
+          id: n._id,
+          message: n.message,
+          title: n.title || "Notification",
+          timestamp: new Date(n.createdAt),
+          read: n.read,
+          zone: n.metadata?.zone || "", // fallback if you store zone in metadata
+        }));
+
+        setNotifications(formatted);
+      } catch (err) {
+        console.error("❌ Failed to load notifications:", err);
       }
-    }, 10000);
-    return () => clearInterval(interval);
-  }, [zoneReports]);
+    };
+
+    fetchAdminNotifications();
+  }, []);
 
   const addNotification = (n) => setNotifications((prev) => [n, ...prev]);
   const markNotificationAsRead = (id) =>
@@ -159,7 +161,7 @@ export default function WardZones() {
       );
     }
   };
-  
+
   const zoneSummaries = zones.map((zone) => {
     const reports = zoneReports[zone] || [];
     const resolved = reports.filter((r) => r.status === "Resolved").length;
@@ -216,7 +218,21 @@ export default function WardZones() {
                         }`}
                         onClick={() => {
                           markNotificationAsRead(n.id);
-                          setActiveZone(n.zone);
+                          if (n.zone) {
+                            setActiveZone(n.zone);
+
+                            // Delay to wait for zoneReports to render
+                            setTimeout(() => {
+                              const el = document.getElementById(
+                                `report-${n.reportId}`
+                              );
+                              if (el)
+                                el.scrollIntoView({
+                                  behavior: "smooth",
+                                  block: "center",
+                                });
+                            }, 300);
+                          }
                         }}
                       >
                         <p className="text-sm">{n.message}</p>
