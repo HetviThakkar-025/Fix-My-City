@@ -22,10 +22,11 @@ const zones = [
 
 export default function WardZones() {
   const [zoneReports, setZoneReports] = useState({});
-  const [activeZone, setActiveZone] = useState("Central Zone");
+  const [activeZone, setActiveZone] = useState("Central");
   const [resolutionTimes, setResolutionTimes] = useState({});
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
+  const [notifiedReports, setNotifiedReports] = useState([]);
 
   // 🔁 Fetch reports from backend on mount
   useEffect(() => {
@@ -57,6 +58,9 @@ export default function WardZones() {
             createdAt: new Date(report.createdAt),
             severity: report.severity,
             createdBy: report.createdBy,
+            notified: report.hasOwnProperty("notified")
+              ? report.notified
+              : false,
           });
         });
 
@@ -102,7 +106,19 @@ export default function WardZones() {
     setNotifications((prev) =>
       prev.map((n) => (n.id === id ? { ...n, read: true } : n))
     );
-  const clearAllNotifications = () => setNotifications([]);
+
+  const clearAllNotifications = async () => {
+    try {
+      await axios.delete("/api/notifications/clear", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setNotifications([]);
+    } catch (err) {
+      console.error("❌ Failed to clear notifications:", err);
+    }
+  };
 
   const handleResolutionTimeChange = (id, time) =>
     setResolutionTimes((prev) => ({ ...prev, [id]: time }));
@@ -110,55 +126,104 @@ export default function WardZones() {
   const handleMarkResolved = async (zone, reportId) => {
     const resolutionTime = resolutionTimes[reportId] || "1 day";
     const token = localStorage.getItem("token");
+    const report = zoneReports[zone].find((r) => r.id === reportId);
 
     try {
-      // ✅ 1. Update backend via PUT
-      const res = await axios.put(
-        `/api/admin/zones/resolve/${reportId}`,
-        {
-          resolutionTime,
-          resolvedBy: "Admin",
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
+      if (report.status !== "Resolved") {
+        // 🔁 1. Mark as resolved
+        const res = await axios.put(
+          `/api/admin/zones/resolve/${reportId}`,
+          {
+            resolutionTime,
+            resolvedBy: "Admin",
           },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        const updatedReport = res.data.report;
+
+        // 🔁 2. Update UI
+        setZoneReports((prev) => ({
+          ...prev,
+          [zone]: prev[zone].map((report) =>
+            report.id === reportId
+              ? {
+                  ...report,
+                  status: updatedReport.status,
+                  resolutionTime: updatedReport.resolutionTime,
+                  resolvedBy: updatedReport.resolvedBy,
+                }
+              : report
+          ),
+        }));
+
+        addNotification({
+          id: Date.now(),
+          zone,
+          reportId,
+          message: `Report #${reportId} resolved successfully in ${resolutionTime}`,
+          timestamp: new Date(),
+          read: false,
+        });
+      } else {
+        // ✅ Notify user manually for already resolved
+        const notifyRes = await axios.post(
+          "/api/notifications",
+          {
+            user: report.createdBy, // Required
+            title: "Issue Resolved", // ✅ REQUIRED
+            message: `Your report titled "${report.title}" has been marked as resolved.`,
+            type: "resolved", // ✅ must be one of the enum values
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // After successful notification creation
+        setNotifiedReports((prev) => [...prev, reportId]);
+
+        console.log("✅ Notification sent to user");
+        addNotification({
+          id: Date.now(),
+          zone,
+          reportId,
+          message: `User notified for report #${reportId}`,
+          timestamp: new Date(),
+          read: false,
+        });
+      }
+    } catch (err) {
+      console.error("❌ Failed:", err.response?.data || err.message);
+    }
+  };
+
+  const handleNotifyUser = async (reportId) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        `/api/ward/reports/${reportId}/notify`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
-      const updatedReport = res.data.report;
-
-      // ✅ 2. Update frontend (local state)
-      setZoneReports((prev) => ({
-        ...prev,
-        [zone]: prev[zone].map((report) =>
-          report.id === reportId
-            ? {
-                ...report,
-                status: updatedReport.status,
-                resolutionTime: updatedReport.resolutionTime,
-                resolvedBy: updatedReport.resolvedBy,
-              }
-            : report
-        ),
-      }));
-
-      // ✅ 3. Optional: Add a notification in frontend bell UI
-      addNotification({
-        id: Date.now(),
-        zone,
-        reportId,
-        message: `Report #${reportId} resolved successfully in ${resolutionTime}`,
-        timestamp: new Date(),
-        read: false,
+      // update UI state
+      setZoneReports((prev) => {
+        const updatedZone = prev[activeZone].map((r) =>
+          r.id === reportId ? { ...r, notified: true } : r
+        );
+        return { ...prev, [activeZone]: updatedZone };
       });
-
-      console.log("✅ Report resolved and user notified.");
     } catch (err) {
-      console.error(
-        "❌ Failed to resolve report:",
-        err.response?.data || err.message
-      );
+      console.error("Failed to notify user", err);
     }
   };
 
@@ -348,7 +413,10 @@ export default function WardZones() {
                         <p className="text-gray-500">Resolution Time</p>
                         <p>{r.resolutionTime || "Pending"}</p>
                       </div>
-                      {r.status !== "Resolved" && (
+
+                      {/* ✅ This block will show until user is notified */}
+                      {/* ✅ Always show est time + button unless user already notified */}
+                      {r.notified !== true && (
                         <div className="flex items-end gap-2">
                           <input
                             type="text"
@@ -360,8 +428,17 @@ export default function WardZones() {
                             className="border rounded p-1 text-sm w-full"
                           />
                           <button
-                            onClick={() => handleMarkResolved(activeZone, r.id)}
+                            onClick={() =>
+                              r.status !== "Resolved"
+                                ? handleMarkResolved(activeZone, r.id)
+                                : handleNotifyUser(r.id)
+                            }
                             className="bg-green-600 text-white p-2 rounded"
+                            title={
+                              r.status === "Resolved"
+                                ? "Notify User"
+                                : "Mark as Resolved"
+                            }
                           >
                             <FiSend size={16} />
                           </button>

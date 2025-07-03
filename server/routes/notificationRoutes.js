@@ -5,6 +5,7 @@ const {
   getNotifications,
   markNotificationRead,
   createNotification,
+  clearNotifications,
 } = require("../controllers/notificationController");
 
 // Get all notifications for logged-in user
@@ -15,5 +16,7 @@ router.patch("/:id/read", protect, markNotificationRead);
 
 // Create a new notification (admin or system use)
 router.post("/", protect, restrictTo("admin"), createNotification); // optionally restrict to admin
+
+router.delete("/clear", protect, clearNotifications);
 
 module.exports = router;

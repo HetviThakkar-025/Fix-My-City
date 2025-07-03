@@ -124,6 +124,8 @@ exports.markZoneReportResolved = async (req, res) => {
     issue.resolutionTime = resolutionTime;
     issue.resolvedBy = resolvedBy;
     issue.resolvedAt = new Date();
+    issue.notified = true;
+
     await issue.save();
 
     // Notify the user who reported it

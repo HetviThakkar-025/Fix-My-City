@@ -55,7 +55,12 @@ const issueSchema = new mongoose.Schema(
     },
 
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    
+
+    notified: {
+      type: Boolean,
+      default: false,
+    },
+
     upvotes: {
       type: Number,
       default: 0,
