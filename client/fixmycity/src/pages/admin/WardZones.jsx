@@ -208,7 +208,7 @@ export default function WardZones() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `/api/ward/reports/${reportId}/notify`,
+        `/api/admin/reports/${reportId}/notify`,
         {},
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -414,8 +414,8 @@ export default function WardZones() {
                         <p>{r.resolutionTime || "Pending"}</p>
                       </div>
 
-                      {/* ✅ This block will show until user is notified */}
-                      {/* ✅ Always show est time + button unless user already notified */}
+                      {/* ✅ Show estimated time input + button if NOT resolved AND NOT notified */}
+                      {/* ✅ Show estimated time input + button logic */}
                       {r.notified !== true && (
                         <div className="flex items-end gap-2">
                           <input
@@ -442,6 +442,13 @@ export default function WardZones() {
                           >
                             <FiSend size={16} />
                           </button>
+                        </div>
+                      )}
+
+                      {/* ✅ If resolved and already notified, show a message */}
+                      {r.status === "Resolved" && r.notified === true && (
+                        <div className="md:col-span-1 text-green-600 text-xs flex items-center">
+                          ✅ User has been notified
                         </div>
                       )}
                     </div>

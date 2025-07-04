@@ -61,11 +61,6 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <p className="text-sm text-gray-600 mt-1">"{f.comments}"</p>
-                {/* {f.suggestions && (
-                  <p className="text-xs text-gray-500 mt-1 italic">
-                    Suggestion: {f.suggestions}
-                  </p>
-                )} */}
               </div>
             ))}
           </div>
