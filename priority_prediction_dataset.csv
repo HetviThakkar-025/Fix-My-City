@@ -1,0 +1,501 @@
+id,description,severity,priority_label
+1,A large pothole has formed making driving unsafe.,medium,Medium
+2,Tree has fallen and is blocking the entire sidewalk.,low,Low
+3,Open manhole is a danger for pedestrians.,high,High
+4,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+5,Drain is blocked causing waterlogging during rain.,low,Low
+6,Water is leaking from the underground pipe continuously.,medium,Low
+7,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+8,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+9,Tree has fallen and is blocking the entire sidewalk.,low,High
+10,"Construction material dumped on footpath, blocking way.",high,Medium
+11,Open manhole is a danger for pedestrians.,high,High
+12,"Construction material dumped on footpath, blocking way.",medium,Medium
+13,Open manhole is a danger for pedestrians.,medium,High
+14,Tree has fallen and is blocking the entire sidewalk.,medium,Medium
+15,"Streetlight not working for days, area is dark at night.",medium,Low
+16,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+17,"Streetlight not working for days, area is dark at night.",low,High
+18,"Streetlight not working for days, area is dark at night.",medium,High
+19,"Construction material dumped on footpath, blocking way.",low,Medium
+20,Open manhole is a danger for pedestrians.,low,Medium
+21,Water is leaking from the underground pipe continuously.,high,High
+22,"Construction material dumped on footpath, blocking way.",medium,Medium
+23,Water is leaking from the underground pipe continuously.,low,Medium
+24,"Construction material dumped on footpath, blocking way.",high,High
+25,A large pothole has formed making driving unsafe.,low,Medium
+26,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+27,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,High
+28,"Streetlight not working for days, area is dark at night.",high,Low
+29,Drain is blocked causing waterlogging during rain.,medium,High
+30,Loudspeakers being used late night in residential area.,high,Medium
+31,A large pothole has formed making driving unsafe.,low,Medium
+32,Drain is blocked causing waterlogging during rain.,low,Medium
+33,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+34,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,High
+35,Drain is blocked causing waterlogging during rain.,medium,High
+36,Drain is blocked causing waterlogging during rain.,medium,Medium
+37,Open manhole is a danger for pedestrians.,medium,Medium
+38,Loudspeakers being used late night in residential area.,high,High
+39,Loudspeakers being used late night in residential area.,low,High
+40,Tree has fallen and is blocking the entire sidewalk.,low,Low
+41,Water is leaking from the underground pipe continuously.,medium,Medium
+42,Cars parked illegally near school creating congestion.,high,High
+43,Water is leaking from the underground pipe continuously.,low,Medium
+44,Drain is blocked causing waterlogging during rain.,high,High
+45,Tree has fallen and is blocking the entire sidewalk.,high,High
+46,"Streetlight not working for days, area is dark at night.",low,Low
+47,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,High
+48,"Construction material dumped on footpath, blocking way.",medium,High
+49,Tree has fallen and is blocking the entire sidewalk.,high,High
+50,"Streetlight not working for days, area is dark at night.",medium,Medium
+51,Loudspeakers being used late night in residential area.,medium,Medium
+52,Tree has fallen and is blocking the entire sidewalk.,low,Low
+53,Drain is blocked causing waterlogging during rain.,high,Medium
+54,Tree has fallen and is blocking the entire sidewalk.,low,High
+55,Tree has fallen and is blocking the entire sidewalk.,medium,High
+56,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+57,A large pothole has formed making driving unsafe.,low,Low
+58,Open manhole is a danger for pedestrians.,high,High
+59,Water is leaking from the underground pipe continuously.,medium,Low
+60,Open manhole is a danger for pedestrians.,high,High
+61,"Streetlight not working for days, area is dark at night.",medium,High
+62,Tree has fallen and is blocking the entire sidewalk.,high,High
+63,"Construction material dumped on footpath, blocking way.",medium,Low
+64,"Construction material dumped on footpath, blocking way.",high,Medium
+65,"Construction material dumped on footpath, blocking way.",medium,High
+66,"Construction material dumped on footpath, blocking way.",medium,Medium
+67,Drain is blocked causing waterlogging during rain.,medium,Low
+68,Loudspeakers being used late night in residential area.,high,High
+69,Loudspeakers being used late night in residential area.,low,Medium
+70,"Streetlight not working for days, area is dark at night.",high,Medium
+71,Cars parked illegally near school creating congestion.,high,Low
+72,Water is leaking from the underground pipe continuously.,low,High
+73,Drain is blocked causing waterlogging during rain.,medium,High
+74,Cars parked illegally near school creating congestion.,high,Low
+75,"Streetlight not working for days, area is dark at night.",low,Medium
+76,Open manhole is a danger for pedestrians.,high,High
+77,"Construction material dumped on footpath, blocking way.",medium,Low
+78,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+79,"Construction material dumped on footpath, blocking way.",low,Low
+80,Cars parked illegally near school creating congestion.,low,Low
+81,Open manhole is a danger for pedestrians.,high,Low
+82,Cars parked illegally near school creating congestion.,medium,High
+83,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Medium
+84,Water is leaking from the underground pipe continuously.,low,High
+85,Loudspeakers being used late night in residential area.,low,High
+86,Tree has fallen and is blocking the entire sidewalk.,medium,Low
+87,"Construction material dumped on footpath, blocking way.",low,Low
+88,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,High
+89,A large pothole has formed making driving unsafe.,low,Medium
+90,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Low
+91,Open manhole is a danger for pedestrians.,high,Medium
+92,"Construction material dumped on footpath, blocking way.",high,Low
+93,"Construction material dumped on footpath, blocking way.",low,High
+94,Open manhole is a danger for pedestrians.,low,Medium
+95,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+96,"Construction material dumped on footpath, blocking way.",high,Low
+97,Cars parked illegally near school creating congestion.,medium,Low
+98,Drain is blocked causing waterlogging during rain.,low,High
+99,Cars parked illegally near school creating congestion.,low,Low
+100,Drain is blocked causing waterlogging during rain.,low,High
+101,Open manhole is a danger for pedestrians.,medium,High
+102,Tree has fallen and is blocking the entire sidewalk.,low,High
+103,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Low
+104,A large pothole has formed making driving unsafe.,low,Low
+105,"Construction material dumped on footpath, blocking way.",medium,Medium
+106,Tree has fallen and is blocking the entire sidewalk.,low,Low
+107,Water is leaking from the underground pipe continuously.,high,Low
+108,"Streetlight not working for days, area is dark at night.",medium,Low
+109,Tree has fallen and is blocking the entire sidewalk.,low,High
+110,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+111,A large pothole has formed making driving unsafe.,high,Medium
+112,"Streetlight not working for days, area is dark at night.",high,High
+113,"Construction material dumped on footpath, blocking way.",low,High
+114,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Medium
+115,Water is leaking from the underground pipe continuously.,high,High
+116,"Construction material dumped on footpath, blocking way.",low,Medium
+117,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+118,"Streetlight not working for days, area is dark at night.",low,Low
+119,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Low
+120,Drain is blocked causing waterlogging during rain.,medium,Low
+121,Drain is blocked causing waterlogging during rain.,medium,Medium
+122,Tree has fallen and is blocking the entire sidewalk.,low,Low
+123,Cars parked illegally near school creating congestion.,low,High
+124,Drain is blocked causing waterlogging during rain.,low,High
+125,Open manhole is a danger for pedestrians.,medium,High
+126,A large pothole has formed making driving unsafe.,low,Medium
+127,Loudspeakers being used late night in residential area.,medium,High
+128,Tree has fallen and is blocking the entire sidewalk.,medium,Low
+129,"Construction material dumped on footpath, blocking way.",medium,Low
+130,Cars parked illegally near school creating congestion.,medium,Low
+131,Tree has fallen and is blocking the entire sidewalk.,high,High
+132,Drain is blocked causing waterlogging during rain.,medium,Low
+133,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+134,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Medium
+135,Drain is blocked causing waterlogging during rain.,high,Low
+136,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+137,Water is leaking from the underground pipe continuously.,low,Low
+138,Tree has fallen and is blocking the entire sidewalk.,medium,High
+139,Cars parked illegally near school creating congestion.,low,Medium
+140,"Construction material dumped on footpath, blocking way.",low,High
+141,Open manhole is a danger for pedestrians.,low,Medium
+142,A large pothole has formed making driving unsafe.,medium,High
+143,Open manhole is a danger for pedestrians.,medium,Medium
+144,"Construction material dumped on footpath, blocking way.",low,Medium
+145,Water is leaking from the underground pipe continuously.,low,High
+146,"Streetlight not working for days, area is dark at night.",low,Medium
+147,Water is leaking from the underground pipe continuously.,high,Low
+148,Loudspeakers being used late night in residential area.,medium,High
+149,"Streetlight not working for days, area is dark at night.",high,High
+150,Tree has fallen and is blocking the entire sidewalk.,low,High
+151,Loudspeakers being used late night in residential area.,low,Medium
+152,Tree has fallen and is blocking the entire sidewalk.,high,Low
+153,Drain is blocked causing waterlogging during rain.,low,Medium
+154,A large pothole has formed making driving unsafe.,medium,Low
+155,"Streetlight not working for days, area is dark at night.",low,Low
+156,Water is leaking from the underground pipe continuously.,medium,Medium
+157,Tree has fallen and is blocking the entire sidewalk.,medium,High
+158,"Construction material dumped on footpath, blocking way.",high,Medium
+159,Cars parked illegally near school creating congestion.,high,Low
+160,"Streetlight not working for days, area is dark at night.",low,Low
+161,"Construction material dumped on footpath, blocking way.",low,High
+162,Loudspeakers being used late night in residential area.,high,Medium
+163,"Streetlight not working for days, area is dark at night.",high,Low
+164,Loudspeakers being used late night in residential area.,high,High
+165,"Construction material dumped on footpath, blocking way.",low,High
+166,Loudspeakers being used late night in residential area.,low,Medium
+167,Loudspeakers being used late night in residential area.,high,High
+168,Water is leaking from the underground pipe continuously.,low,Medium
+169,Cars parked illegally near school creating congestion.,medium,Medium
+170,Open manhole is a danger for pedestrians.,medium,Low
+171,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+172,Tree has fallen and is blocking the entire sidewalk.,low,Low
+173,Cars parked illegally near school creating congestion.,high,High
+174,A large pothole has formed making driving unsafe.,high,Medium
+175,Drain is blocked causing waterlogging during rain.,high,High
+176,Tree has fallen and is blocking the entire sidewalk.,low,Low
+177,Open manhole is a danger for pedestrians.,low,Medium
+178,Drain is blocked causing waterlogging during rain.,low,Low
+179,Loudspeakers being used late night in residential area.,low,Low
+180,Water is leaking from the underground pipe continuously.,high,High
+181,Open manhole is a danger for pedestrians.,medium,Medium
+182,Tree has fallen and is blocking the entire sidewalk.,medium,Low
+183,Tree has fallen and is blocking the entire sidewalk.,medium,Medium
+184,Water is leaking from the underground pipe continuously.,high,Medium
+185,Tree has fallen and is blocking the entire sidewalk.,medium,Low
+186,"Construction material dumped on footpath, blocking way.",low,Low
+187,"Construction material dumped on footpath, blocking way.",low,Low
+188,Loudspeakers being used late night in residential area.,low,High
+189,Open manhole is a danger for pedestrians.,medium,High
+190,"Streetlight not working for days, area is dark at night.",low,Medium
+191,Water is leaking from the underground pipe continuously.,low,High
+192,Drain is blocked causing waterlogging during rain.,high,High
+193,Loudspeakers being used late night in residential area.,medium,Medium
+194,"Construction material dumped on footpath, blocking way.",high,High
+195,"Construction material dumped on footpath, blocking way.",high,Medium
+196,Cars parked illegally near school creating congestion.,medium,Medium
+197,Loudspeakers being used late night in residential area.,low,Low
+198,Open manhole is a danger for pedestrians.,low,Low
+199,A large pothole has formed making driving unsafe.,medium,Low
+200,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,High
+201,Cars parked illegally near school creating congestion.,low,Medium
+202,A large pothole has formed making driving unsafe.,high,Medium
+203,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+204,"Streetlight not working for days, area is dark at night.",low,High
+205,Loudspeakers being used late night in residential area.,high,High
+206,Tree has fallen and is blocking the entire sidewalk.,medium,High
+207,Loudspeakers being used late night in residential area.,high,High
+208,Cars parked illegally near school creating congestion.,high,Medium
+209,Open manhole is a danger for pedestrians.,low,High
+210,"Construction material dumped on footpath, blocking way.",low,Low
+211,Drain is blocked causing waterlogging during rain.,high,High
+212,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Low
+213,Drain is blocked causing waterlogging during rain.,high,High
+214,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,High
+215,Loudspeakers being used late night in residential area.,medium,High
+216,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+217,Water is leaking from the underground pipe continuously.,medium,Medium
+218,"Construction material dumped on footpath, blocking way.",medium,Low
+219,"Construction material dumped on footpath, blocking way.",medium,Medium
+220,"Construction material dumped on footpath, blocking way.",low,High
+221,Loudspeakers being used late night in residential area.,high,High
+222,"Construction material dumped on footpath, blocking way.",medium,High
+223,Cars parked illegally near school creating congestion.,medium,High
+224,Loudspeakers being used late night in residential area.,low,Low
+225,"Construction material dumped on footpath, blocking way.",high,Medium
+226,Open manhole is a danger for pedestrians.,high,Medium
+227,Loudspeakers being used late night in residential area.,high,High
+228,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+229,"Streetlight not working for days, area is dark at night.",medium,Medium
+230,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+231,Water is leaking from the underground pipe continuously.,low,High
+232,Water is leaking from the underground pipe continuously.,low,Low
+233,"Streetlight not working for days, area is dark at night.",low,Medium
+234,Cars parked illegally near school creating congestion.,medium,Medium
+235,A large pothole has formed making driving unsafe.,high,Medium
+236,"Streetlight not working for days, area is dark at night.",high,Medium
+237,Open manhole is a danger for pedestrians.,low,Medium
+238,"Construction material dumped on footpath, blocking way.",high,Low
+239,Tree has fallen and is blocking the entire sidewalk.,low,High
+240,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Medium
+241,Loudspeakers being used late night in residential area.,high,High
+242,A large pothole has formed making driving unsafe.,high,High
+243,Open manhole is a danger for pedestrians.,low,High
+244,"Construction material dumped on footpath, blocking way.",low,Low
+245,Open manhole is a danger for pedestrians.,medium,Low
+246,Loudspeakers being used late night in residential area.,high,Medium
+247,Drain is blocked causing waterlogging during rain.,low,High
+248,"Streetlight not working for days, area is dark at night.",medium,Medium
+249,A large pothole has formed making driving unsafe.,medium,Medium
+250,Drain is blocked causing waterlogging during rain.,low,Low
+251,Water is leaking from the underground pipe continuously.,low,Medium
+252,Water is leaking from the underground pipe continuously.,high,Medium
+253,Cars parked illegally near school creating congestion.,low,Medium
+254,"Construction material dumped on footpath, blocking way.",low,Low
+255,"Streetlight not working for days, area is dark at night.",high,Low
+256,Cars parked illegally near school creating congestion.,low,High
+257,"Streetlight not working for days, area is dark at night.",high,Medium
+258,A large pothole has formed making driving unsafe.,medium,Medium
+259,Water is leaking from the underground pipe continuously.,medium,Medium
+260,Open manhole is a danger for pedestrians.,medium,High
+261,Loudspeakers being used late night in residential area.,high,Medium
+262,"Streetlight not working for days, area is dark at night.",low,Low
+263,"Streetlight not working for days, area is dark at night.",low,High
+264,Open manhole is a danger for pedestrians.,high,Low
+265,Water is leaking from the underground pipe continuously.,low,High
+266,Tree has fallen and is blocking the entire sidewalk.,low,Low
+267,"Construction material dumped on footpath, blocking way.",medium,Medium
+268,Loudspeakers being used late night in residential area.,low,Medium
+269,Cars parked illegally near school creating congestion.,medium,Medium
+270,A large pothole has formed making driving unsafe.,high,Medium
+271,Tree has fallen and is blocking the entire sidewalk.,medium,Low
+272,Open manhole is a danger for pedestrians.,medium,Low
+273,"Construction material dumped on footpath, blocking way.",low,Medium
+274,Tree has fallen and is blocking the entire sidewalk.,low,Low
+275,A large pothole has formed making driving unsafe.,low,Medium
+276,Open manhole is a danger for pedestrians.,high,High
+277,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+278,Cars parked illegally near school creating congestion.,medium,Low
+279,Water is leaking from the underground pipe continuously.,high,Medium
+280,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+281,Drain is blocked causing waterlogging during rain.,low,High
+282,Drain is blocked causing waterlogging during rain.,high,Medium
+283,A large pothole has formed making driving unsafe.,high,High
+284,Open manhole is a danger for pedestrians.,high,Medium
+285,Open manhole is a danger for pedestrians.,medium,Low
+286,A large pothole has formed making driving unsafe.,low,Low
+287,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Low
+288,Cars parked illegally near school creating congestion.,low,Low
+289,Tree has fallen and is blocking the entire sidewalk.,low,High
+290,"Construction material dumped on footpath, blocking way.",low,Medium
+291,Loudspeakers being used late night in residential area.,medium,Low
+292,Water is leaking from the underground pipe continuously.,high,Low
+293,Water is leaking from the underground pipe continuously.,high,Low
+294,Loudspeakers being used late night in residential area.,low,High
+295,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,High
+296,A large pothole has formed making driving unsafe.,medium,Medium
+297,A large pothole has formed making driving unsafe.,high,High
+298,Drain is blocked causing waterlogging during rain.,high,Low
+299,Drain is blocked causing waterlogging during rain.,medium,Medium
+300,"Streetlight not working for days, area is dark at night.",high,Low
+301,Water is leaking from the underground pipe continuously.,high,Low
+302,Loudspeakers being used late night in residential area.,high,Low
+303,"Streetlight not working for days, area is dark at night.",low,Medium
+304,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+305,"Streetlight not working for days, area is dark at night.",low,Low
+306,Cars parked illegally near school creating congestion.,low,High
+307,Open manhole is a danger for pedestrians.,medium,High
+308,Drain is blocked causing waterlogging during rain.,low,High
+309,"Construction material dumped on footpath, blocking way.",high,Medium
+310,"Streetlight not working for days, area is dark at night.",medium,Medium
+311,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,High
+312,Drain is blocked causing waterlogging during rain.,high,High
+313,Loudspeakers being used late night in residential area.,high,Low
+314,Tree has fallen and is blocking the entire sidewalk.,low,High
+315,"Construction material dumped on footpath, blocking way.",medium,High
+316,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+317,Loudspeakers being used late night in residential area.,medium,Low
+318,Loudspeakers being used late night in residential area.,medium,Low
+319,"Streetlight not working for days, area is dark at night.",medium,Medium
+320,Drain is blocked causing waterlogging during rain.,low,Medium
+321,"Construction material dumped on footpath, blocking way.",low,Low
+322,Water is leaking from the underground pipe continuously.,low,High
+323,Cars parked illegally near school creating congestion.,medium,High
+324,Water is leaking from the underground pipe continuously.,high,High
+325,Loudspeakers being used late night in residential area.,high,Medium
+326,Open manhole is a danger for pedestrians.,medium,High
+327,Water is leaking from the underground pipe continuously.,medium,Low
+328,"Streetlight not working for days, area is dark at night.",medium,High
+329,Tree has fallen and is blocking the entire sidewalk.,medium,High
+330,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+331,A large pothole has formed making driving unsafe.,low,Low
+332,"Construction material dumped on footpath, blocking way.",high,Medium
+333,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+334,Loudspeakers being used late night in residential area.,high,High
+335,"Construction material dumped on footpath, blocking way.",low,Low
+336,"Streetlight not working for days, area is dark at night.",medium,Low
+337,"Construction material dumped on footpath, blocking way.",low,High
+338,Loudspeakers being used late night in residential area.,low,Medium
+339,A large pothole has formed making driving unsafe.,low,Low
+340,Water is leaking from the underground pipe continuously.,low,High
+341,Loudspeakers being used late night in residential area.,medium,High
+342,Drain is blocked causing waterlogging during rain.,medium,Medium
+343,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+344,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,High
+345,Drain is blocked causing waterlogging during rain.,medium,High
+346,A large pothole has formed making driving unsafe.,low,Low
+347,"Streetlight not working for days, area is dark at night.",low,High
+348,Loudspeakers being used late night in residential area.,low,Low
+349,A large pothole has formed making driving unsafe.,high,Low
+350,A large pothole has formed making driving unsafe.,medium,High
+351,Open manhole is a danger for pedestrians.,medium,High
+352,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+353,Drain is blocked causing waterlogging during rain.,medium,High
+354,"Construction material dumped on footpath, blocking way.",high,Low
+355,Cars parked illegally near school creating congestion.,high,High
+356,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+357,Water is leaking from the underground pipe continuously.,low,Medium
+358,Cars parked illegally near school creating congestion.,high,High
+359,Water is leaking from the underground pipe continuously.,high,Low
+360,Open manhole is a danger for pedestrians.,high,Medium
+361,Water is leaking from the underground pipe continuously.,high,High
+362,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+363,Drain is blocked causing waterlogging during rain.,high,High
+364,"Streetlight not working for days, area is dark at night.",high,Medium
+365,"Construction material dumped on footpath, blocking way.",medium,Medium
+366,Open manhole is a danger for pedestrians.,medium,Medium
+367,Water is leaking from the underground pipe continuously.,medium,Medium
+368,Cars parked illegally near school creating congestion.,medium,Low
+369,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+370,"Streetlight not working for days, area is dark at night.",medium,Medium
+371,Drain is blocked causing waterlogging during rain.,high,High
+372,Loudspeakers being used late night in residential area.,high,High
+373,"Streetlight not working for days, area is dark at night.",high,High
+374,"Streetlight not working for days, area is dark at night.",medium,Low
+375,Loudspeakers being used late night in residential area.,medium,High
+376,Open manhole is a danger for pedestrians.,medium,High
+377,"Streetlight not working for days, area is dark at night.",low,High
+378,"Streetlight not working for days, area is dark at night.",medium,Low
+379,Open manhole is a danger for pedestrians.,low,Low
+380,A large pothole has formed making driving unsafe.,medium,Low
+381,Loudspeakers being used late night in residential area.,low,High
+382,"Streetlight not working for days, area is dark at night.",high,Medium
+383,Water is leaking from the underground pipe continuously.,high,High
+384,"Construction material dumped on footpath, blocking way.",high,High
+385,Drain is blocked causing waterlogging during rain.,high,Medium
+386,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+387,Tree has fallen and is blocking the entire sidewalk.,low,Low
+388,Open manhole is a danger for pedestrians.,low,Medium
+389,Water is leaking from the underground pipe continuously.,low,High
+390,Cars parked illegally near school creating congestion.,high,High
+391,"Construction material dumped on footpath, blocking way.",medium,High
+392,Loudspeakers being used late night in residential area.,high,Medium
+393,Open manhole is a danger for pedestrians.,high,Medium
+394,Drain is blocked causing waterlogging during rain.,low,High
+395,Water is leaking from the underground pipe continuously.,high,Medium
+396,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+397,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,High
+398,Cars parked illegally near school creating congestion.,medium,Low
+399,Tree has fallen and is blocking the entire sidewalk.,low,Medium
+400,A large pothole has formed making driving unsafe.,medium,High
+401,Water is leaking from the underground pipe continuously.,high,Low
+402,Water is leaking from the underground pipe continuously.,high,Medium
+403,Water is leaking from the underground pipe continuously.,low,Medium
+404,Drain is blocked causing waterlogging during rain.,high,Medium
+405,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Low
+406,"Construction material dumped on footpath, blocking way.",high,High
+407,Loudspeakers being used late night in residential area.,medium,Medium
+408,Cars parked illegally near school creating congestion.,low,High
+409,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+410,"Streetlight not working for days, area is dark at night.",high,Low
+411,"Streetlight not working for days, area is dark at night.",medium,Medium
+412,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+413,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+414,"Streetlight not working for days, area is dark at night.",high,High
+415,A large pothole has formed making driving unsafe.,low,High
+416,"Construction material dumped on footpath, blocking way.",medium,Low
+417,Open manhole is a danger for pedestrians.,high,Low
+418,Open manhole is a danger for pedestrians.,high,Low
+419,Loudspeakers being used late night in residential area.,high,High
+420,Loudspeakers being used late night in residential area.,low,High
+421,Water is leaking from the underground pipe continuously.,low,Medium
+422,Tree has fallen and is blocking the entire sidewalk.,low,High
+423,"Streetlight not working for days, area is dark at night.",medium,Medium
+424,"Streetlight not working for days, area is dark at night.",high,High
+425,"Streetlight not working for days, area is dark at night.",high,Low
+426,Drain is blocked causing waterlogging during rain.,medium,Medium
+427,Open manhole is a danger for pedestrians.,medium,Low
+428,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,Low
+429,A large pothole has formed making driving unsafe.,high,Low
+430,A large pothole has formed making driving unsafe.,low,Medium
+431,Open manhole is a danger for pedestrians.,high,High
+432,Cars parked illegally near school creating congestion.,medium,Medium
+433,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+434,Drain is blocked causing waterlogging during rain.,low,Medium
+435,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+436,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+437,Water is leaking from the underground pipe continuously.,medium,High
+438,Loudspeakers being used late night in residential area.,high,Medium
+439,Water is leaking from the underground pipe continuously.,medium,Medium
+440,Drain is blocked causing waterlogging during rain.,medium,High
+441,Cars parked illegally near school creating congestion.,high,High
+442,Drain is blocked causing waterlogging during rain.,high,Medium
+443,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+444,"Streetlight not working for days, area is dark at night.",high,Medium
+445,Loudspeakers being used late night in residential area.,low,Medium
+446,"Streetlight not working for days, area is dark at night.",high,High
+447,Drain is blocked causing waterlogging during rain.,low,Low
+448,Tree has fallen and is blocking the entire sidewalk.,low,Low
+449,A large pothole has formed making driving unsafe.,medium,High
+450,Drain is blocked causing waterlogging during rain.,low,High
+451,A large pothole has formed making driving unsafe.,low,High
+452,A large pothole has formed making driving unsafe.,medium,Medium
+453,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+454,Open manhole is a danger for pedestrians.,low,High
+455,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Medium
+456,Drain is blocked causing waterlogging during rain.,high,High
+457,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,High
+458,"Construction material dumped on footpath, blocking way.",low,Medium
+459,Water is leaking from the underground pipe continuously.,high,Low
+460,Loudspeakers being used late night in residential area.,medium,High
+461,Loudspeakers being used late night in residential area.,medium,High
+462,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Low
+463,Water is leaking from the underground pipe continuously.,high,High
+464,"Construction material dumped on footpath, blocking way.",medium,High
+465,Cars parked illegally near school creating congestion.,medium,Medium
+466,Open manhole is a danger for pedestrians.,medium,Low
+467,Drain is blocked causing waterlogging during rain.,low,High
+468,Water is leaking from the underground pipe continuously.,medium,Low
+469,A large pothole has formed making driving unsafe.,low,Medium
+470,Tree has fallen and is blocking the entire sidewalk.,low,High
+471,A large pothole has formed making driving unsafe.,high,High
+472,"Streetlight not working for days, area is dark at night.",low,Low
+473,"Garbage bin not emptied, causing bad smell and mosquitoes.",low,High
+474,Loudspeakers being used late night in residential area.,medium,High
+475,Cars parked illegally near school creating congestion.,high,High
+476,A large pothole has formed making driving unsafe.,low,Medium
+477,Loudspeakers being used late night in residential area.,medium,High
+478,A large pothole has formed making driving unsafe.,high,Low
+479,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,Medium
+480,Water is leaking from the underground pipe continuously.,low,Medium
+481,Open manhole is a danger for pedestrians.,high,High
+482,"Construction material dumped on footpath, blocking way.",medium,High
+483,A large pothole has formed making driving unsafe.,medium,Low
+484,Cars parked illegally near school creating congestion.,high,Low
+485,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,High
+486,Cars parked illegally near school creating congestion.,medium,High
+487,Cars parked illegally near school creating congestion.,medium,High
+488,"Streetlight not working for days, area is dark at night.",low,Low
+489,Tree has fallen and is blocking the entire sidewalk.,medium,High
+490,Tree has fallen and is blocking the entire sidewalk.,low,Low
+491,"Garbage bin not emptied, causing bad smell and mosquitoes.",high,Medium
+492,Tree has fallen and is blocking the entire sidewalk.,low,High
+493,"Construction material dumped on footpath, blocking way.",medium,High
+494,"Garbage bin not emptied, causing bad smell and mosquitoes.",medium,High
+495,Tree has fallen and is blocking the entire sidewalk.,high,Medium
+496,A large pothole has formed making driving unsafe.,low,High
+497,Water is leaking from the underground pipe continuously.,low,Medium
+498,Open manhole is a danger for pedestrians.,medium,High
+499,Loudspeakers being used late night in residential area.,high,High
+500,Tree has fallen and is blocking the entire sidewalk.,high,High

@@ -1,2 +1,22 @@
+# Node.js
 node_modules/
 .env
+
+# Python virtual environments
+venv/
+ml/venv/
+*/venv/
+
+# Python cache & artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Data folders (large / auto-generated)
+ml/data/raw/
+ml/data/processed/
+
+# Other common
+.DS_Store
+*.log
