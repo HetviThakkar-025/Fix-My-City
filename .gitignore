@@ -4,7 +4,9 @@ node_modules/
 
 # Python virtual environments
 venv/
+venv310/
 ml/venv/
+*/venv*/
 */venv/
 
 # Python cache & artifacts

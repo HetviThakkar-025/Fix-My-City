@@ -40,7 +40,7 @@ export default function Navbar() {
             to="/user"
             className="text-xl font-bold text-blue-600 flex items-center"
           >
-            Fix My City
+            FixMyCity User
           </Link>
 
           {/* Desktop Nav Links */}

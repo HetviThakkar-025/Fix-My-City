@@ -9,16 +9,16 @@ const {
   notifyAdminFromOfficer,
 } = require("../controllers/adminController");
 
-// ✅ Admin dashboard stats (used in AdminDashboard.jsx)
+// Admin dashboard stats (used in AdminDashboard.jsx)
 router.get("/dashboard", protect, restrictTo("admin"), getAdminDashboardData);
 
-// ✅ Admin: Get all user-reported issues (used in AllReports.jsx)
+// Admin: Get all user-reported issues (used in AllReports.jsx)
 router.get("/reports", protect, restrictTo("admin"), getAllReports);
 
-// ✅ Zones (Ward-wise reporting)
+// Zones (Ward-wise reporting)
 router.get("/zones", protect, restrictTo("admin"), getZoneWiseReports);
 
-// ✅ Officer → Admin notification (officer updates a report, admin gets notified)
+// Officer → Admin notification (officer updates a report, admin gets notified)
 router.post(
   "/zones/officer-update",
   protect,
@@ -26,7 +26,7 @@ router.post(
   notifyAdminFromOfficer
 );
 
-// ✅ Admin marks report resolved + notifies user
+// Admin marks report resolved + notifies user
 router.put(
   "/zones/resolve/:id",
   protect,
@@ -34,7 +34,7 @@ router.put(
   markZoneReportResolved
 );
 
-// ✅ Admin notifies user (after resolving the issue)
+// Admin notifies user (after resolving the issue)
 router.post(
   "/reports/:id/notify",
   protect,

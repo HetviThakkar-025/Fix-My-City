@@ -11,10 +11,12 @@ function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError("");
 
     try {
       const res = await axios.post("/api/auth/login", { email, password });
-      const { token, role: userRole } = res.data; // ✅ FIXED HERE
+      const { token, role: userRole } = res.data;
+      console.log("Logging in with:", { email, password });
 
       localStorage.setItem("token", token);
       localStorage.setItem("role", userRole);
