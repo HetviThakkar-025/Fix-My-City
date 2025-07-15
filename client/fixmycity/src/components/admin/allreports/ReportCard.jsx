@@ -1,4 +1,4 @@
-export default function ReportCard({ report, onAssign }) {
+export default function ReportCard({ report, onAssign, predictedPriority }) {
   const getStatusStyle = (status) => {
     switch (status) {
       case "Resolved":
@@ -21,6 +21,19 @@ export default function ReportCard({ report, onAssign }) {
     }
   };
 
+  const getPriorityStyle = (priority) => {
+    switch (priority?.toLowerCase()) {
+      case "high":
+        return "bg-red-100 text-red-800";
+      case "medium":
+        return "bg-orange-100 text-orange-800";
+      case "low":
+        return "bg-green-100 text-green-800";
+      default:
+        return "bg-purple-100 text-purple-800"; // fallback
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-sm p-4 border border-gray-200">
       <div className="flex justify-between items-start">
@@ -29,6 +42,16 @@ export default function ReportCard({ report, onAssign }) {
             {report.title}
           </h3>
           <p className="text-sm text-gray-600 mt-1">{report.description}</p>
+
+          {predictedPriority && (
+            <div
+              className={`mt-2 inline-block font-semibold px-3 py-1 rounded-full text-base ${getPriorityStyle(
+                predictedPriority
+              )}`}
+            >
+              Predicted Priority: {predictedPriority}
+            </div>
+          )}
         </div>
 
         <div className="mt-2 text-xs text-gray-500">

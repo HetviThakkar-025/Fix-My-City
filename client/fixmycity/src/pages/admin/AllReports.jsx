@@ -5,6 +5,8 @@ import ReportCard from "../../components/admin/allreports/ReportCard";
 import ExportButton from "../../components/admin/allreports/ExportButton";
 
 export default function AllReports() {
+  const [predictedPriorities, setPredictedPriorities] = useState({});
+  const [loadingPriority, setLoadingPriority] = useState(false);
   const [reports, setReports] = useState([]);
   const [filters, setFilters] = useState({
     status: "All",
@@ -96,8 +98,36 @@ export default function AllReports() {
     alert("🔍 Duplicate detection via ML (future)");
   };
 
-  const handlePriorityPrediction = () => {
-    alert("⚙️ Priority prediction via ML (future)");
+  const handlePriorityPrediction = async () => {
+    try {
+      setLoadingPriority(true);
+
+      // collect descriptions of filtered reports
+      const descriptions = filteredReports.map((r) => r.description);
+      console.log("Sending to Node:", descriptions);
+
+      const res = await axios.post(
+        "/api/ml/predict-priority",
+        { descriptions },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      // res.data: { predictions: [...] }
+      // Map back to report IDs
+      const newPredictions = {};
+      filteredReports.forEach((report, idx) => {
+        newPredictions[report.id] = res.data.predictions[idx];
+      });
+
+      setPredictedPriorities(newPredictions);
+    } catch (err) {
+      console.error("Priority prediction failed:", err);
+      alert("Failed to predict priority.");
+    } finally {
+      setLoadingPriority(false);
+    }
   };
 
   return (
@@ -114,9 +144,12 @@ export default function AllReports() {
           </button>
           <button
             onClick={handlePriorityPrediction}
-            className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium"
+            disabled={loadingPriority}
+            className={`bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded text-sm font-medium ${
+              loadingPriority ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Predict Priority (AI)
+            {loadingPriority ? "Predicting..." : "Predict Priority (AI)"}
           </button>
         </div>
       </div>
@@ -134,6 +167,7 @@ export default function AllReports() {
               key={report.id}
               report={report}
               onAssign={handleAssign}
+              predictedPriority={predictedPriorities[report.id]}
             />
           ))}
         </div>

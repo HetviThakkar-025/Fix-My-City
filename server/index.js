@@ -2,7 +2,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const express = require("express");
+const cors = require("cors");
 const connectDB = require("./config/db");
+
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
@@ -13,10 +15,28 @@ const announcementRoutes = require("./routes/announcementRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
 const wardReportRoutes = require("./routes/wardRoutes");
+const mlRoutes = require("./routes/mlroutes");
+
+// const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const app = express();
+
+// Enable JSON parsing
 app.use(express.json());
 
+// Allow CORS from client (React dev server)
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
+// Connect to MongoDB Atlas
+connectDB();
+
+// Your existing API routes
+app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/issues", issueRoutes);
@@ -26,16 +46,12 @@ app.use("/api/announcements", announcementRoutes);
 app.use("/api/feedback", feedbackRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/ward", wardReportRoutes);
-
-// Connect to MongoDB Atlas
-connectDB();
+app.use("/api/ml", mlRoutes);
 
 // Default test route
 app.get("/", (req, res) => {
   res.send("API is working");
 });
-
-app.use("/api/auth", authRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
