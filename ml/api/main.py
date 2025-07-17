@@ -1,11 +1,13 @@
 import time
 from fastapi import FastAPI
 from pydantic import BaseModel
+from typing import List, Dict
 import pickle
 import pandas as pd
 import numpy as np
 from ml.scripts.preprocessing import preprocess_text_column
 from ml.scripts.feature_utils import count_high_words
+from ml.scripts.predict_duplicates import detect_duplicates
 
 app = FastAPI(
     title="FixMyCity ML Service",
@@ -25,6 +27,14 @@ class PredictRequest(BaseModel):
 
 class PredictResponse(BaseModel):
     predictions: list[str]
+
+
+class DuplicateRequest(BaseModel):
+    reports: List[Dict]  # each dict must have id, title, description, lat, lng
+
+
+class DuplicateResponse(BaseModel):
+    duplicates: List[Dict]  # each dict with report1, report2, similarity
 
 
 def build_features(texts):
@@ -59,3 +69,10 @@ def predict_priority_batch(req: PredictRequest):
     print(f" Total request time: {time.time() - overall_start:.2f} seconds")
 
     return PredictResponse(predictions=preds.tolist())
+
+
+@app.post("/predict-duplicates", response_model=DuplicateResponse)
+def predict_duplicates(req: DuplicateRequest):
+    print(f"Received {len(req.reports)} reports for duplicate detection")
+    dup = detect_duplicates(req.reports)
+    return DuplicateResponse(duplicates=dup)

@@ -76,7 +76,11 @@ exports.getAdminDashboardData = async (req, res) => {
 
 exports.getAllReports = async (req, res) => {
   try {
-    const reports = await Issue.find().sort({ createdAt: -1 }).lean();
+    const reports = await Issue.find()
+      .select("title description tags zone severity status location createdAt")
+      .sort({ createdAt: -1 })
+      .lean();
+
     res.json(reports);
   } catch (err) {
     console.error("Error fetching all reports:", err);

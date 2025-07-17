@@ -6,7 +6,9 @@ import ExportButton from "../../components/admin/allreports/ExportButton";
 
 export default function AllReports() {
   const [predictedPriorities, setPredictedPriorities] = useState({});
+  const [loadingDuplicates, setLoadingDuplicates] = useState(false);
   const [loadingPriority, setLoadingPriority] = useState(false);
+  const [duplicatePairs, setDuplicatePairs] = useState([]);
   const [reports, setReports] = useState([]);
   const [filters, setFilters] = useState({
     status: "All",
@@ -36,6 +38,8 @@ export default function AllReports() {
           status: mapStatus(r.status),
           assignedZone: r.zone || "",
           createdAt: new Date(r.createdAt),
+          lat: r.location?.coordinates?.lat || null,
+          lng: r.location?.coordinates?.lng || null,
         }));
 
         setReports(formatted);
@@ -94,9 +98,29 @@ export default function AllReports() {
     }
   };
 
-  const handleDuplicateDetection = () => {
-    alert("🔍 Duplicate detection via ML (future)");
-  };
+  async function handleDetectDuplicates() {
+    try {
+      setLoadingDuplicates(true);
+
+      const response = await axios.post("/api/ml/predict-duplicates", {
+        reports: filteredReports.map((r) => ({
+          id: r.id,
+          title: r.title,
+          description: r.description,
+          lat: r.lat,
+          lng: r.lng,
+        })),
+      });
+
+      console.log("Duplicates:", response.data.duplicates);
+      setDuplicatePairs(response.data.duplicates);
+    } catch (err) {
+      console.error("Failed to detect duplicates", err);
+      alert("Failed to detect duplicates");
+    } finally {
+      setLoadingDuplicates(false);
+    }
+  }
 
   const handlePriorityPrediction = async () => {
     try {
@@ -137,7 +161,7 @@ export default function AllReports() {
         <div className="flex flex-wrap gap-2">
           <ExportButton reports={filteredReports} />
           <button
-            onClick={handleDuplicateDetection}
+            onClick={handleDetectDuplicates}
             className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded text-sm font-medium"
           >
             Detect Duplicates (AI)
@@ -168,6 +192,7 @@ export default function AllReports() {
               report={report}
               onAssign={handleAssign}
               predictedPriority={predictedPriorities[report.id]}
+              duplicatePairs={duplicatePairs}
             />
           ))}
         </div>

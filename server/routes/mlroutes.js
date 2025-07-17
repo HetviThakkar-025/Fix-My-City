@@ -23,4 +23,18 @@ router.post("/predict-priority", async (req, res) => {
   }
 });
 
+router.post("/predict-duplicates", async (req, res) => {
+  console.log("[Node] Received request to /api/ml/predict-duplicates");
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8001/predict-duplicates",
+      req.body
+    );
+    res.json(response.data);
+  } catch (error) {
+    console.error("❌ [Node] Error calling FastAPI:", error.message);
+    res.status(500).json({ error: "Failed to detect duplicates" });
+  }
+});
+
 module.exports = router;
