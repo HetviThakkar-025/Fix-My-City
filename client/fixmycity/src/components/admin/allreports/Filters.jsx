@@ -37,7 +37,7 @@ export default function Filters({ filters, onChange }) {
         </div>
 
         {/* Zone Filter */}
-        <div>
+        {/* <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Zone
           </label>
@@ -52,7 +52,7 @@ export default function Filters({ filters, onChange }) {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* Category Filter */}
         <div>

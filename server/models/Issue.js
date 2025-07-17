@@ -65,6 +65,13 @@ const issueSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    mergedInto: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Issue",
+      default: null,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

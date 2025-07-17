@@ -3,8 +3,13 @@ export default function ReportCard({
   onAssign,
   predictedPriority,
   duplicatePairs = [],
+  onMerge,
 }) {
   const isDuplicate = duplicatePairs.some(
+    (pair) => pair.report1 === report.id || pair.report2 === report.id
+  );
+
+  const duplicateWith = duplicatePairs.filter(
     (pair) => pair.report1 === report.id || pair.report2 === report.id
   );
 
@@ -198,6 +203,20 @@ export default function ReportCard({
         >
           Auto-Assign
         </button>
+
+        {duplicateWith.map((pair) => {
+          const otherId =
+            pair.report1 === report.id ? pair.report2 : pair.report1;
+          return (
+            <button
+              key={otherId}
+              onClick={() => onMerge && onMerge(report.id, otherId)}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs"
+            >
+              Merge with #{otherId ? otherId.slice(-4) : "unknown"}
+            </button>
+          );
+        })}
       </div>
     </div>
   );

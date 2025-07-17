@@ -171,3 +171,20 @@ exports.notifyAdminFromOfficer = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+// POST /api/admin/reports/merge
+exports.mergeReports = async (req, res) => {
+  try {
+    const { report1Id, report2Id } = req.body;
+    if (!report1Id || !report2Id) {
+      return res.status(400).json({ message: "Missing report IDs" });
+    }
+
+    // Mark report2 as merged into report1
+    await Issue.findByIdAndUpdate(report2Id, { mergedInto: report1Id });
+    res.json({ message: "Reports merged successfully" });
+  } catch (err) {
+    console.error("Error merging reports:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};

@@ -8,7 +8,7 @@ exports.getZoneReports = async (req, res) => {
     const zone =
       role.split("_")[1].charAt(0).toUpperCase() + role.split("_")[1].slice(1);
 
-    const reports = await Report.find({ zone });
+    const reports = await Report.find({ zone, mergedInto: null });
     console.log(zone);
     res.json(reports);
   } catch (err) {
@@ -21,33 +21,53 @@ exports.updateReportStatus = async (req, res) => {
   const { status, notes } = req.body;
 
   try {
-    const report = await Report.findById(id);
-    if (!report) return res.status(404).json({ error: "Report not found" });
+    // Find the main report and all reports merged into it
+    const reports = await Report.find({
+      $or: [{ _id: id }, { mergedInto: id }],
+    }).populate("createdBy"); // populate users to notify
 
-    report.status = status.toLowerCase();
-    report.resolutionNotes = notes || "";
-    report.resolvedBy = req.user.name;
-    report.resolutionTime = new Date();
-    await report.save();
+    if (!reports || reports.length === 0) {
+      return res.status(404).json({ error: "Report(s) not found" });
+    }
 
-    // Notify admin
+    // Update each report
+    for (let issue of reports) {
+      issue.status = status.toLowerCase();
+      issue.resolutionNotes = notes || "";
+      issue.resolvedBy = req.user.name;
+      issue.resolutionTime = new Date();
+      issue.notified = true;
+      await issue.save();
+
+      // Notify the user who created this report
+      await Notification.create({
+        user: issue.createdBy._id,
+        type: "resolved",
+        message: `Your report titled "${issue.title}" has been resolved by officer ${req.user.name}.`,
+      });
+    }
+
+    // Notify admin about officer update (only once)
     const admin = await User.findOne({ role: "admin" });
     if (admin) {
       await Notification.create({
         user: admin._id,
         type: "officer_update",
-        message: `Officer ${req.user.name} updated status for report #${report._id} in ${report.zone}. New status: ${status}`,
+        message: `Officer ${req.user.name} updated status for report #${id} (and merged reports if any). New status: ${status}`,
         metadata: {
-          zone: report.zone,
-          reportId: report._id,
+          reportId: id,
+          zone: reports[0].zone,
         },
       });
     }
 
-    res.json({ success: true, message: "Status updated and admin notified" });
+    res.json({
+      success: true,
+      message: "Status updated, users notified, and admin notified",
+    });
   } catch (err) {
-    console.error("Error in updateReportStatus:", err); // ✅ log full error
-    res.status(500).json({ error: "Failed to update report" });
+    console.error("Error in updateReportStatus:", err);
+    res.status(500).json({ error: "Failed to update report(s)" });
   }
 };
 

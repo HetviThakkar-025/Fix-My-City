@@ -7,6 +7,7 @@ const {
   getZoneWiseReports,
   markZoneReportResolved,
   notifyAdminFromOfficer,
+  mergeReports,
 } = require("../controllers/adminController");
 
 // Admin dashboard stats (used in AdminDashboard.jsx)
@@ -33,6 +34,9 @@ router.put(
   restrictTo("admin"),
   markZoneReportResolved
 );
+
+// Merge two duplicate reports
+router.post("/reports/merge", protect, restrictTo("admin"), mergeReports);
 
 // Admin notifies user (after resolving the issue)
 router.post(

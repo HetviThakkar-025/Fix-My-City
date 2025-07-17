@@ -17,17 +17,14 @@ export default function AllReports() {
     severity: "All",
   });
 
-  // 🔁 Fetch reports from backend
+  // ✅ Fetch reports from backend
   useEffect(() => {
     const fetchReports = async () => {
       try {
         const res = await axios.get("/api/admin/reports", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 
-        // Transform tags → category for filters
         const formatted = res.data.map((r) => ({
           id: r._id,
           title: r.title,
@@ -80,12 +77,10 @@ export default function AllReports() {
     );
   });
 
-  // ✅ Simulate assignment (future: hit backend here)
+  // ✅ Handle manual or auto-assign
   const handleAssign = async (reportId, zone) => {
     try {
-      // Optional: call backend to assign
-      // await axios.put(`/api/admin/assign/${reportId}`, { zone })
-
+      // optionally call backend: await axios.put(...)
       setReports((prev) =>
         prev.map((r) =>
           r.id === reportId
@@ -98,38 +93,43 @@ export default function AllReports() {
     }
   };
 
-  async function handleDetectDuplicates() {
+  // ✅ Handle detect duplicates
+  const handleDetectDuplicates = async () => {
     try {
       setLoadingDuplicates(true);
 
-      const response = await axios.post("/api/ml/predict-duplicates", {
-        reports: filteredReports.map((r) => ({
-          id: r.id,
-          title: r.title,
-          description: r.description,
-          lat: r.lat,
-          lng: r.lng,
-        })),
-      });
+      const response = await axios.post(
+        "/api/ml/predict-duplicates",
+        {
+          reports: filteredReports.map((r) => ({
+            id: r.id,
+            title: r.title,
+            description: r.description,
+            lat: r.lat,
+            lng: r.lng,
+          })),
+        },
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       console.log("Duplicates:", response.data.duplicates);
       setDuplicatePairs(response.data.duplicates);
     } catch (err) {
-      console.error("Failed to detect duplicates", err);
+      console.error("Failed to detect duplicates:", err);
       alert("Failed to detect duplicates");
     } finally {
       setLoadingDuplicates(false);
     }
-  }
+  };
 
+  // ✅ Handle priority prediction
   const handlePriorityPrediction = async () => {
     try {
       setLoadingPriority(true);
 
-      // collect descriptions of filtered reports
       const descriptions = filteredReports.map((r) => r.description);
-      console.log("Sending to Node:", descriptions);
-
       const res = await axios.post(
         "/api/ml/predict-priority",
         { descriptions },
@@ -138,8 +138,6 @@ export default function AllReports() {
         }
       );
 
-      // res.data: { predictions: [...] }
-      // Map back to report IDs
       const newPredictions = {};
       filteredReports.forEach((report, idx) => {
         newPredictions[report.id] = res.data.predictions[idx];
@@ -154,6 +152,30 @@ export default function AllReports() {
     }
   };
 
+  const handleMerge = async (reportId1, reportId2) => {
+    try {
+      const res = await axios.post(
+        "/api/admin/reports/merge",
+        { report1Id: reportId1, report2Id: reportId2 }, 
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      console.log("Merge successful:", res.data.message);
+
+      // remove merged reports, or update state if needed
+      setReports(
+        (prev) => prev.filter((r) => r.id !== reportId2) // keep reportId1, remove merged one
+      );
+
+      alert(res.data.message || "Reports merged successfully");
+    } catch (err) {
+      console.error("Merge failed:", err);
+      alert("Failed to merge reports");
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
@@ -162,9 +184,12 @@ export default function AllReports() {
           <ExportButton reports={filteredReports} />
           <button
             onClick={handleDetectDuplicates}
-            className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded text-sm font-medium"
+            disabled={loadingDuplicates}
+            className={`bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded text-sm font-medium ${
+              loadingDuplicates ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
-            Detect Duplicates (AI)
+            {loadingDuplicates ? "Detecting..." : "Detect Duplicates (AI)"}
           </button>
           <button
             onClick={handlePriorityPrediction}
@@ -193,6 +218,7 @@ export default function AllReports() {
               onAssign={handleAssign}
               predictedPriority={predictedPriorities[report.id]}
               duplicatePairs={duplicatePairs}
+              onMerge={handleMerge}
             />
           ))}
         </div>
