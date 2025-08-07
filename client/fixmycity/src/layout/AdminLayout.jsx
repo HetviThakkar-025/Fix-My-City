@@ -1,5 +1,6 @@
 import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
 import Footer from "../components/user/Footer";
+import { FiLogOut } from "react-icons/fi";
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ export default function AdminLayout() {
                 onClick={handleLogout}
                 className="text-gray-500 hover:text-gray-700 inline-flex items-center text-sm font-medium"
               >
-                Logout
+                <FiLogOut className="mr-1" /> Logout
               </button>
             </div>
           </div>

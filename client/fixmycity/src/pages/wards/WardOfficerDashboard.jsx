@@ -139,11 +139,19 @@ const WardOfficerDashboard = () => {
               </span>
               <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm">
                 <FiCheckCircle size={14} />
-                {reports.filter((r) => r.status === "Resolved").length} Resolved
+                {
+                  reports.filter((r) => r.status?.toLowerCase() === "resolved")
+                    .length
+                }{" "}
+                Resolved
               </span>
               <span className="inline-flex items-center gap-1 bg-orange-50 text-orange-700 px-3 py-1 rounded-full text-sm">
                 <FiClock size={14} />
-                {reports.filter((r) => r.status !== "Resolved").length} Pending
+                {
+                  reports.filter((r) => r.status?.toLowerCase() !== "resolved")
+                    .length
+                }{" "}
+                Pending
               </span>
             </div>
           </div>

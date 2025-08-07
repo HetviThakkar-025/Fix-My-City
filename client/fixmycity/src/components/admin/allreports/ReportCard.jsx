@@ -75,7 +75,7 @@ export default function ReportCard({
                 isDuplicate ? "text-rose-800" : "text-gray-900"
               }`}
             >
-              {report.title}
+              #{report.id.slice(-4)} - {report.title}
             </h3>
             {isDuplicate && (
               <span className="bg-rose-200 text-rose-900 text-xs font-semibold px-3 py-1 rounded-full flex items-center">
@@ -177,12 +177,26 @@ export default function ReportCard({
               : "bg-yellow-100 text-yellow-800"
           }`}
         >
-          Upvotes:  {report.upvotes}
+          Upvotes: {report.upvotes}
         </span>
+
+        {duplicateWith.map((pair) => {
+          const otherId =
+            pair.report1 === report.id ? pair.report2 : pair.report1;
+          return (
+            <button
+              key={otherId}
+              onClick={() => onMerge && onMerge(report.id, otherId)}
+              className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs"
+            >
+              Merge with #{otherId ? otherId.slice(-4) : "unknown"}
+            </button>
+          );
+        })}
       </div>
 
       <div className="flex flex-wrap gap-3 items-center">
-        <select
+        {/* <select
           onChange={(e) => onAssign(report.id, e.target.value)}
           className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 ${
             isDuplicate
@@ -211,9 +225,9 @@ export default function ReportCard({
           }`}
         >
           Auto-Assign
-        </button>
+        </button> */}
 
-        {duplicateWith.map((pair) => {
+        {/* {duplicateWith.map((pair) => {
           const otherId =
             pair.report1 === report.id ? pair.report2 : pair.report1;
           return (
@@ -225,7 +239,7 @@ export default function ReportCard({
               Merge with #{otherId ? otherId.slice(-4) : "unknown"}
             </button>
           );
-        })}
+        })} */}
       </div>
     </div>
   );
