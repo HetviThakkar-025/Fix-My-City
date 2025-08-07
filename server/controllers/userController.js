@@ -1,5 +1,6 @@
 // controllers/userController.js
 const Issue = require("../models/Issue");
+const User = require("../models/User");
 
 exports.getUserHomeData = async (req, res) => {
   try {
@@ -35,7 +36,10 @@ exports.getUserHomeData = async (req, res) => {
       count: t.count,
     }));
 
-    res.status(200).json({ stats, trendingIssues });
+    const user = await User.findById(req.user.id).select("name");
+    console.log(user);
+
+    res.status(200).json({ stats, trendingIssues, user: user.name });
   } catch (err) {
     console.error("Error fetching home data", err);
     res.status(500).json({ message: "Failed to load user home data" });

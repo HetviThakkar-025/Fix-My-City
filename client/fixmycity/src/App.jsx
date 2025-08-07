@@ -5,6 +5,8 @@ import {
   Navigate,
 } from "react-router-dom";
 
+import HomePage from "./pages/HomePage";
+
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 
@@ -29,6 +31,7 @@ function App() {
     <Router>
       <Routes>
         {/* Public Routes */}
+        <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

@@ -170,6 +170,15 @@ export default function ReportCard({
         >
           Severity: {report.severity}
         </span>
+        <span
+          className={`text-sm px-3 py-1 rounded-full ${
+            isDuplicate
+              ? "bg-rose-100 text-rose-800"
+              : "bg-yellow-100 text-yellow-800"
+          }`}
+        >
+          Upvotes:  {report.upvotes}
+        </span>
       </div>
 
       <div className="flex flex-wrap gap-3 items-center">

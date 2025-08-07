@@ -77,7 +77,7 @@ exports.getAdminDashboardData = async (req, res) => {
 exports.getAllReports = async (req, res) => {
   try {
     const reports = await Issue.find()
-      .select("title description tags zone severity status location createdAt")
+      .select("title description tags zone severity status location createdAt upvotes")
       .sort({ createdAt: -1 })
       .lean();
 

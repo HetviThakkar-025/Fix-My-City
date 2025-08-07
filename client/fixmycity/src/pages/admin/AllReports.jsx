@@ -12,12 +12,12 @@ export default function AllReports() {
   const [reports, setReports] = useState([]);
   const [filters, setFilters] = useState({
     status: "All",
-    zone: "All",
+    upvotes: "All",
     category: "All",
     severity: "All",
   });
 
-  // ✅ Fetch reports from backend
+  // Fetch reports from backend
   useEffect(() => {
     const fetchReports = async () => {
       try {
@@ -37,6 +37,7 @@ export default function AllReports() {
           createdAt: new Date(r.createdAt),
           lat: r.location?.coordinates?.lat || null,
           lng: r.location?.coordinates?.lng || null,
+          upvotes: r.upvotes || 0,
         }));
 
         setReports(formatted);
@@ -67,15 +68,30 @@ export default function AllReports() {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  const filteredReports = reports.filter((report) => {
-    return (
-      (filters.status === "All" || report.status === filters.status) &&
-      (filters.zone === "All" || report.zone === filters.zone) &&
-      (filters.category === "All" || report.category === filters.category) &&
-      (filters.severity === "All" ||
-        report.severity.toLowerCase() === filters.severity.toLowerCase())
-    );
-  });
+  // const filteredReports = reports.filter((report) => {
+  //   return (
+  //     (filters.status === "All" || report.status === filters.status) &&
+  //     (filters.zone === "All" || report.zone === filters.zone) &&
+  //     (filters.category === "All" || report.category === filters.category) &&
+  //     (filters.severity === "All" ||
+  //       report.severity.toLowerCase() === filters.severity.toLowerCase())
+  //   );
+  // });
+
+  const filteredReports = reports
+    .filter((report) => {
+      return (
+        (filters.status === "All" || report.status === filters.status) &&
+        (filters.category === "All" || report.category === filters.category) &&
+        (filters.severity === "All" ||
+          report.severity.toLowerCase() === filters.severity.toLowerCase())
+      );
+    })
+    .sort((a, b) => {
+      if (filters.upvotes === "Most Upvoted") return b.upvotes - a.upvotes;
+      if (filters.upvotes === "Least Upvoted") return a.upvotes - b.upvotes;
+      return 0;
+    });
 
   // ✅ Handle manual or auto-assign
   const handleAssign = async (reportId, zone) => {
@@ -156,7 +172,7 @@ export default function AllReports() {
     try {
       const res = await axios.post(
         "/api/admin/reports/merge",
-        { report1Id: reportId1, report2Id: reportId2 }, 
+        { report1Id: reportId1, report2Id: reportId2 },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
