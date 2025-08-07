@@ -405,18 +405,18 @@ export default function WardZones() {
                       Reported: {r.createdAt.toLocaleDateString()}
                     </p>
                     <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      <div>
+                      {/* <div>
                         <p className="text-gray-500">Officer</p>
                         <p>{r.resolvedBy || "Unassigned"}</p>
                       </div>
                       <div>
                         <p className="text-gray-500">Resolution Time</p>
                         <p>{r.resolutionTime || "Pending"}</p>
-                      </div>
+                      </div> */}
 
                       {/* ✅ Show estimated time input + button if NOT resolved AND NOT notified */}
                       {/* ✅ Show estimated time input + button logic */}
-                      {r.notified !== true && (
+                      {/* {r.notified !== true && (
                         <div className="flex items-end gap-2">
                           <input
                             type="text"
@@ -443,14 +443,14 @@ export default function WardZones() {
                             <FiSend size={16} />
                           </button>
                         </div>
-                      )}
+                      )} */}
 
                       {/* ✅ If resolved and already notified, show a message */}
-                      {r.status === "Resolved" && r.notified === true && (
+                      {/* {r.status === "Resolved" && r.notified === true && (
                         <div className="md:col-span-1 text-green-600 text-xs flex items-center">
                           ✅ User has been notified
                         </div>
-                      )}
+                      )} */}
                     </div>
                   </div>
                 ))}

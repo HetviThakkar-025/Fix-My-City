@@ -43,7 +43,7 @@ exports.updateReportStatus = async (req, res) => {
       await Notification.create({
         user: issue.createdBy._id,
         type: "resolved",
-        message: `Your report titled "${issue.title}" has been resolved by officer ${req.user.name}.`,
+        message: `Your report titled "${issue.title}" has been resolved in "${issue.resolutionNotes}" .`,
       });
     }
 

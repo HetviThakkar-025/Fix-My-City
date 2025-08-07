@@ -11,6 +11,7 @@ import {
   FiUser,
   FiMap,
   FiLogOut,
+  FiMapPin,
 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -284,11 +285,11 @@ const WardOfficerDashboard = () => {
                         {new Date(report.createdAt).toLocaleDateString()}
                       </div>
                       <div className="flex items-center gap-1 text-gray-600">
-                        <FiMap size={14} />
+                        <FiMapPin size={14} />
                         {report.location?.address || "Unknown Location"}
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-4 mt-3 text-sm">
+                    {/* <div className="flex flex-wrap gap-4 mt-3 text-sm">
                       <div className="text-gray-600">
                         Category:{" "}
                         <span className="font-medium">{report.title}</span>
@@ -297,7 +298,7 @@ const WardOfficerDashboard = () => {
                         Status:{" "}
                         <span className="font-medium">{report.status}</span>
                       </div>
-                    </div>
+                    </div> */}
                   </div>
                   <span
                     className={`px-3 py-1 rounded-full flex items-center gap-1 text-sm font-medium ${
@@ -337,11 +338,11 @@ const WardOfficerDashboard = () => {
 
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Resolution Notes
+                      Resolution Time
                     </label>
                     <input
                       type="text"
-                      placeholder="Add your notes here..."
+                      placeholder="Resolution days"
                       value={resolutionNotes[report._id] || ""}
                       onChange={(e) =>
                         setResolutionNotes({
@@ -358,7 +359,7 @@ const WardOfficerDashboard = () => {
                       onClick={() => handleStatusUpdate(report._id, "Resolved")}
                       className="w-full bg-green-600 hover:bg-green-700 text-white px-4 py-2.5 rounded-lg flex items-center justify-center gap-2 transition-colors"
                     >
-                      <FiMessageSquare size={16} /> Notify Admin
+                      <FiMessageSquare size={16} /> Notify Admin & User
                     </button>
                   </div>
                 </div>

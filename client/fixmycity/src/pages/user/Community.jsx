@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import ReportList from "../../components/user/community/ReportList";
-// import PollCreator from "../../components/user/community/PollCreator";
 import PollList from "../../components/user/community/PollList";
 import AnnouncementList from "../../components/user/community/AnnouncementList";
-import { Tabs, Tab } from "../../components/ui/Tabs"; // Assume you have a Tabs component
+import { Tabs, Tab } from "../../components/ui/Tabs"; 
 
 export default function Community() {
   const [activeTab, setActiveTab] = useState("reports");
