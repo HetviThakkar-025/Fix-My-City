@@ -194,53 +194,6 @@ export default function ReportCard({
           );
         })}
       </div>
-
-      <div className="flex flex-wrap gap-3 items-center">
-        {/* <select
-          onChange={(e) => onAssign(report.id, e.target.value)}
-          className={`border rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 ${
-            isDuplicate
-              ? "border-rose-300 focus:ring-rose-500 focus:border-rose-500"
-              : "border-gray-300 focus:ring-blue-500 focus:border-blue-500"
-          }`}
-          defaultValue=""
-        >
-          <option value="" disabled>
-            Assign Zone
-          </option>
-          <option value="Central Zone">Central Zone</option>
-          <option value="East Zone">East Zone</option>
-          <option value="West Zone">West Zone</option>
-          <option value="North Zone">North Zone</option>
-          <option value="South Zone">South Zone</option>
-          <option value="North West Zone">North West Zone</option>
-          <option value="South West Zone">South West Zone</option>
-        </select>
-        <button
-          onClick={() => onAssign(report.id, "auto")}
-          className={`text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200 ${
-            isDuplicate
-              ? "bg-rose-600 hover:bg-rose-700"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
-        >
-          Auto-Assign
-        </button> */}
-
-        {/* {duplicateWith.map((pair) => {
-          const otherId =
-            pair.report1 === report.id ? pair.report2 : pair.report1;
-          return (
-            <button
-              key={otherId}
-              onClick={() => onMerge && onMerge(report.id, otherId)}
-              className="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs"
-            >
-              Merge with #{otherId ? otherId.slice(-4) : "unknown"}
-            </button>
-          );
-        })} */}
-      </div>
     </div>
   );
 }

@@ -10,9 +10,12 @@ import {
   FiMessageSquare,
   FiUser,
   FiMap,
+  FiLogOut,
 } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const WardOfficerDashboard = () => {
+  const navigate = useNavigate();
   const [officerZone, setOfficerZone] = useState("");
   const [officerName, setOfficerName] = useState("");
   const [reports, setReports] = useState([]);
@@ -123,6 +126,12 @@ const WardOfficerDashboard = () => {
     setTimeout(() => setNotification(null), 3000);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    navigate("/login");
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 bg-gray-50 min-h-screen">
       <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
@@ -155,12 +164,22 @@ const WardOfficerDashboard = () => {
               </span>
             </div>
           </div>
-          <button
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            <FiFilter /> Filters <FiChevronDown />
-          </button>
+
+          <div className="hidden sm:ml-6 sm:flex sm:flex-col sm:items-start gap-2">
+            <button
+              onClick={handleLogout}
+              className="text-gray-500 hover:text-gray-700 inline-flex items-center text-md font-medium mb-1"
+            >
+              <FiLogOut className="mr-1" /> Logout
+            </button>
+
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FiFilter /> Filters <FiChevronDown />
+            </button>
+          </div>
         </div>
       </div>
 
