@@ -17,8 +17,6 @@ const notificationRoutes = require("./routes/notificationRoutes");
 const wardReportRoutes = require("./routes/wardRoutes");
 const mlRoutes = require("./routes/mlroutes");
 
-// const { createProxyMiddleware } = require("http-proxy-middleware");
-
 const app = express();
 
 // Enable JSON parsing

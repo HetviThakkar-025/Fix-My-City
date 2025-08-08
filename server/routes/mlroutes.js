@@ -23,6 +23,7 @@ router.post("/predict-priority", async (req, res) => {
   }
 });
 
+// POST /api/ml/predict-duplicates
 router.post("/predict-duplicates", async (req, res) => {
   console.log("[Node] Received request to /api/ml/predict-duplicates");
   try {
@@ -37,4 +38,27 @@ router.post("/predict-duplicates", async (req, res) => {
   }
 });
 
-module.exports = router;
+// POST /api/ml/generate-summary
+router.post("/generate-summary", async (req, res) => {
+  console.log("[Node] Received request to /api/ml/generate-summary");
+  try {
+    const { descriptions } = req.body;
+    console.log(
+      "[Node] Forwarding to FastAPI summarizer:",
+      descriptions.length
+    );
+
+    const response = await axios.post(
+      "http://127.0.0.1:8001/generate-summary",
+      { descriptions }
+    );
+
+    console.log("[Node] Got summaries from FastAPI:", response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error("❌ [Node] Error calling FastAPI summarizer:", error.message);
+    res.status(500).json({ error: "Failed to generate summaries" });
+  }
+});
+
+module.exports = router;  

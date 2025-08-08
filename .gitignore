@@ -22,3 +22,6 @@ ml/data/processed/
 # Other common
 .DS_Store
 *.log
+
+admin.txt
+models.txt

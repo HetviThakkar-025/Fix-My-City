@@ -28,6 +28,7 @@ const WardOfficerDashboard = () => {
   });
   const [showFilters, setShowFilters] = useState(false);
   const [notification, setNotification] = useState(null);
+  const [loadingSummaries, setLoadingSummaries] = useState(false);
 
   useEffect(() => {
     const role = localStorage.getItem("role");
@@ -133,6 +134,56 @@ const WardOfficerDashboard = () => {
     navigate("/login");
   };
 
+  // handler to call your backend summarize endpoint
+  const handleGenerateSummaries = async () => {
+    try {
+      setLoadingSummaries(true);
+      setNotification(null);
+
+      // Extract descriptions from already-loaded reports in state
+      const descriptions = reports.map((r) => r.description);
+
+      if (descriptions.length === 0) {
+        setNotification({ type: "info", message: "No reports to summarize" });
+        setLoadingSummaries(false);
+        return;
+      }
+
+      const token = localStorage.getItem("token");
+      const res = await fetch("/api/ml/generate-summary", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ descriptions }),
+      });
+
+      const payload = await res.json();
+
+      if (!res.ok) {
+        throw new Error(
+          payload.error || payload.message || "Failed to summarize"
+        );
+      }
+
+      // payload will be your summaries array from FastAPI → Node → frontend
+      // Merge summaries into your existing reports state
+      const updatedReports = reports.map((report, idx) => ({
+        ...report,
+        summary: payload.summaries ? payload.summaries[idx] : "",
+      }));
+
+      console.log(updatedReports);
+      setReports(updatedReports);
+    } catch (err) {
+      console.error("Summarize error:", err);
+    } finally {
+      setLoadingSummaries(false);
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 bg-gray-50 min-h-screen">
       <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
@@ -164,6 +215,21 @@ const WardOfficerDashboard = () => {
                 Pending
               </span>
             </div>
+          </div>
+
+          {/* button placed between */}
+          <div className="mt-4">
+            <button
+              onClick={handleGenerateSummaries}
+              disabled={loadingSummaries}
+              className={`w-full flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium transition-colors ${
+                loadingSummaries
+                  ? "bg-purple-600 cursor-not-allowed opacity-80"
+                  : "bg-purple-700 hover:bg-purple-600"
+              }`}
+            >
+              {loadingSummaries ? "Generating..." : "Generate Summaries (AI)"}
+            </button>
           </div>
 
           <div className="hidden sm:ml-6 sm:flex sm:flex-col sm:items-start gap-2">
@@ -278,6 +344,11 @@ const WardOfficerDashboard = () => {
                         </span>
                       )}
                     </div>
+                    <div className="flex items-center gap-3 mt-2">
+                      <p className="text-md text-gray-700">
+                        {report.summary ? report.summary : report.description}
+                      </p>
+                    </div>
                     <div className="flex flex-wrap gap-4 mt-3 text-sm">
                       <div className="flex items-center gap-1 text-gray-600">
                         <FiCalendar size={14} />
@@ -289,16 +360,6 @@ const WardOfficerDashboard = () => {
                         {report.location?.address || "Unknown Location"}
                       </div>
                     </div>
-                    {/* <div className="flex flex-wrap gap-4 mt-3 text-sm">
-                      <div className="text-gray-600">
-                        Category:{" "}
-                        <span className="font-medium">{report.title}</span>
-                      </div>
-                      <div className="text-gray-600">
-                        Status:{" "}
-                        <span className="font-medium">{report.status}</span>
-                      </div>
-                    </div> */}
                   </div>
                   <span
                     className={`px-3 py-1 rounded-full flex items-center gap-1 text-sm font-medium ${

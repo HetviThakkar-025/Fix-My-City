@@ -8,6 +8,7 @@ import numpy as np
 from ml.scripts.preprocessing import preprocess_text_column
 from ml.scripts.feature_utils import count_high_words
 from ml.scripts.predict_duplicates import detect_duplicates
+from ml.scripts.predict_summary import generate_summary
 
 app = FastAPI(
     title="FixMyCity ML Service",
@@ -35,6 +36,14 @@ class DuplicateRequest(BaseModel):
 
 class DuplicateResponse(BaseModel):
     duplicates: List[Dict]  # each dict with report1, report2, similarity
+
+
+class SummaryRequest(BaseModel):
+    descriptions: list[str]
+
+
+class SummaryResponse(BaseModel):
+    summaries: list[str]
 
 
 def build_features(texts):
@@ -76,3 +85,10 @@ def predict_duplicates(req: DuplicateRequest):
     print(f"Received {len(req.reports)} reports for duplicate detection")
     dup = detect_duplicates(req.reports)
     return DuplicateResponse(duplicates=dup)
+
+
+@app.post("/generate-summary", response_model=SummaryResponse)
+def generate_summary_batch(req: SummaryRequest):
+    print(f"Received {len(req.descriptions)} descriptions for summarization")
+    summaries = generate_summary(req.descriptions)
+    return SummaryResponse(summaries=summaries)
