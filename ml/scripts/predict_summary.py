@@ -6,7 +6,7 @@ summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 print("Summarization model loaded!")
 
 
-def generate_summary(texts, max_len=60, min_len=15):
+def generate_summary(texts, max_len=30, min_len=10):
     """
     Generate summaries for a list of text descriptions.
     :param texts: list of strings

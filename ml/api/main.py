@@ -5,10 +5,13 @@ from typing import List, Dict
 import pickle
 import pandas as pd
 import numpy as np
+from typing import Optional
 from ml.scripts.preprocessing import preprocess_text_column
 from ml.scripts.feature_utils import count_high_words
 from ml.scripts.predict_duplicates import detect_duplicates
 from ml.scripts.predict_summary import generate_summary
+from ml.scripts.predict_toxicity import toxicity_detector
+
 
 app = FastAPI(
     title="FixMyCity ML Service",
@@ -44,6 +47,15 @@ class SummaryRequest(BaseModel):
 
 class SummaryResponse(BaseModel):
     summaries: list[str]
+
+
+class ToxicityRequest(BaseModel):
+    texts: List[str]
+    threshold: Optional[float] = 0.9
+
+
+class ToxicityResponse(BaseModel):
+    results: List[Dict]
 
 
 def build_features(texts):
@@ -92,3 +104,23 @@ def generate_summary_batch(req: SummaryRequest):
     print(f"Received {len(req.descriptions)} descriptions for summarization")
     summaries = generate_summary(req.descriptions)
     return SummaryResponse(summaries=summaries)
+
+
+@app.post("/detect-toxicity", response_model=ToxicityResponse)
+async def detect_toxicity(req: ToxicityRequest):
+    """
+    Detect toxic content in reports using AI model
+    """
+    print(f"Received {len(req.texts)} texts for toxicity detection")
+    # print(req.texts)
+    results = toxicity_detector.predict_toxicity(req.texts)
+
+    # Apply threshold
+    for result in results:
+        if 'scores' in result:
+            result['is_toxic'] = any(
+                score > req.threshold for label, score in result['scores'].items()
+                if label != 'neutral'
+            )
+
+    return ToxicityResponse(results=results)

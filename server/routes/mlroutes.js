@@ -61,4 +61,46 @@ router.post("/generate-summary", async (req, res) => {
   }
 });
 
-module.exports = router;  
+// POST /api/ml/detect-toxicity
+router.post("/detect-toxicity", async (req, res) => {
+  console.log("[Node] Received request to /api/ml/detect-toxicity");
+
+  try {
+    const { texts, threshold } = req.body;
+    console.log("[Node] Forwarding texts to FastAPI toxicity detector:", {
+      textCount: texts.length,
+      threshold,
+    });
+
+    const response = await axios.post("http://127.0.0.1:8001/detect-toxicity", {
+      texts,
+      threshold: threshold || 0.85, // Default threshold if not provided
+    });
+
+    console.log("[Node] Got toxicity results from FastAPI:", {
+      resultCount: response.data.results.length,
+    });
+
+    res.json({
+      success: true,
+      results: response.data.results.map((result, index) => ({
+        text: texts[index],
+        ...result,
+      })),
+    });
+  } catch (error) {
+    console.error(
+      "❌ [Node] Error calling FastAPI toxicity detector:",
+      error.message
+    );
+
+    // Enhanced error response
+    res.status(500).json({
+      success: false,
+      error: "Failed to detect toxicity",
+      details: error.response?.data || error.message,
+    });
+  }
+});
+
+module.exports = router;

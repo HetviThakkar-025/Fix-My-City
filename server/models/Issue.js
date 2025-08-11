@@ -72,6 +72,16 @@ const issueSchema = new mongoose.Schema(
       default: null,
     },
 
+    isSpam: {
+      type: Boolean,
+      default: false,
+    },
+    spamReason: {
+      type: String,
+      enum: ["profanity", "shouting", "repetitive", "irrelevant", "warning", null],
+      default: null,
+    },
+
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

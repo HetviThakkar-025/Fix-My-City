@@ -2,6 +2,8 @@ const Issue = require("../models/Issue");
 const Feedback = require("../models/Feedback");
 const Notification = require("../models/Notification");
 const User = require("../models/User");
+const axios = require("axios");
+const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8001";
 
 exports.getAdminDashboardData = async (req, res) => {
   try {
@@ -77,7 +79,9 @@ exports.getAdminDashboardData = async (req, res) => {
 exports.getAllReports = async (req, res) => {
   try {
     const reports = await Issue.find()
-      .select("title description tags zone severity status location createdAt upvotes")
+      .select(
+        "title description tags zone severity status location createdAt upvotes"
+      )
       .sort({ createdAt: -1 })
       .lean();
 
@@ -186,5 +190,142 @@ exports.mergeReports = async (req, res) => {
   } catch (err) {
     console.error("Error merging reports:", err);
     res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+// Toxicity detection for zone reports
+exports.detectToxicReports = async (req, res) => {
+  try {
+    const { zone } = req.body;
+
+    // 1. Get reports for the zone
+    const reports = await Issue.find({
+      zone,
+      isSpam: { $ne: true },
+      status: { $ne: "resolved" },
+    }).lean();
+
+    if (!reports.length) {
+      return res.json({
+        success: true,
+        toxicReports: [],
+        message: "No reports to analyze in this zone",
+      });
+    }
+
+    // 2. Prepare texts for ML analysis
+    const texts = reports.map((r) => `${r.title}\n${r.description}`);
+
+    // 3. Call ML service
+    const mlResponse = await axios.post(`${ML_SERVICE_URL}/detect-toxicity`, {
+      texts,
+      threshold: 0.85,
+    });
+
+    // 4. Map toxic reports with original report data
+    const toxicReports = reports
+      .filter((_, index) => mlResponse.data.results[index]?.is_toxic)
+      .map((report, index) => ({
+        ...report,
+        toxicity: mlResponse.data.results[index],
+      }));
+
+    console.log("ML Service Response:", mlResponse.data);
+
+    console.log(toxicReports);
+
+    res.json({
+      success: true,
+      toxicReports: toxicReports.map((tr) => ({
+        _id: tr._id,
+        title: tr.title,
+        reasons: Object.entries(tr.toxicity.scores)
+          .filter(([_, score]) => score > 0.85)
+          .map(([label]) => label),
+      })),
+    });
+  } catch (err) {
+    console.error("Error detecting toxic reports:", err);
+    res.status(500).json({
+      success: false,
+      error: err.response?.data?.error || err.message,
+    });
+  }
+};
+
+// Mark report as spam
+exports.markReportAsSpam = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason } = req.body;
+
+    // 1. Update report
+    const report = await Issue.findByIdAndUpdate(
+      id,
+      {
+        isSpam: true,
+        spamReason: reason || "irrelevant",
+        status: "resolved", // Automatically resolve spam reports
+      },
+      { new: true }
+    ).populate("createdBy");
+
+    if (!report) {
+      return res.status(404).json({
+        success: false,
+        error: "Report not found",
+      });
+    }
+
+    // 2. Notify the user — don't fail the whole endpoint if notification errors
+    try {
+      await Notification.create({
+        user: report.createdBy._id,
+        title: "Report Marked as Spam",
+        message: `Your report "${report.title}" was marked as spam. Reason: ${
+          reason || "irrelevant"
+        }`,
+        type: "rejected", // <-- use allowed enum value
+        metadata: {
+          reportId: report._id,
+          zone: report.zone,
+        },
+      });
+    } catch (notifErr) {
+      // log and continue — marking spam still succeeded
+      console.warn("Failed to create notification for spam-mark:", notifErr);
+    }
+
+    // 3. Return the updated report to the frontend
+    res.json({
+      success: true,
+      report,
+    });
+  } catch (err) {
+    console.error("Error marking report as spam:", err);
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+};
+
+exports.deleteReport = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const report = await Issue.findById(id);
+    if (!report) {
+      return res
+        .status(404)
+        .json({ success: false, error: "Report not found" });
+    }
+
+    await report.deleteOne();
+
+    res.json({ success: true, message: "Report deleted successfully" });
+  } catch (err) {
+    console.error("Error deleting report:", err);
+    res.status(500).json({ success: false, error: err.message });
   }
 };

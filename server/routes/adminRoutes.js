@@ -8,6 +8,9 @@ const {
   markZoneReportResolved,
   notifyAdminFromOfficer,
   mergeReports,
+  detectToxicReports,
+  markReportAsSpam,
+  deleteReport,
 } = require("../controllers/adminController");
 
 // Admin dashboard stats (used in AdminDashboard.jsx)
@@ -83,5 +86,23 @@ router.post(
     }
   }
 );
+
+// Detect toxic reports in a zone
+router.post(
+  "/reports/detect-toxic",
+  protect,
+  restrictTo("admin"),
+  detectToxicReports
+);
+
+// Mark report as spam
+router.put(
+  "/reports/:id/mark-spam",
+  protect,
+  restrictTo("admin"),
+  markReportAsSpam
+);
+
+router.delete("/reports/:id", protect, restrictTo("admin"), deleteReport);
 
 module.exports = router;

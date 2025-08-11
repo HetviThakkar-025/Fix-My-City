@@ -8,6 +8,9 @@ import {
   FiMapPin,
   FiBell,
   FiX,
+  FiFlag,
+  FiTrash2,
+  FiAlertTriangle,
 } from "react-icons/fi";
 
 const zones = [
@@ -27,8 +30,12 @@ export default function WardZones() {
   const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifiedReports, setNotifiedReports] = useState([]);
+  const [spamReports, setSpamReports] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [toxicReports, setToxicReports] = useState([]);
+  const [toxicityLoading, setToxicityLoading] = useState(false);
 
-  // 🔁 Fetch reports from backend on mount
+  // Fetch reports from backend on mount
   useEffect(() => {
     const fetchReports = async () => {
       try {
@@ -46,6 +53,7 @@ export default function WardZones() {
 
           reportsByZone[zone].push({
             id: report._id,
+            description: report.description,
             title: report.title,
             status:
               report.status === "resolved"
@@ -204,29 +212,6 @@ export default function WardZones() {
     }
   };
 
-  const handleNotifyUser = async (reportId) => {
-    try {
-      const token = localStorage.getItem("token");
-      await axios.post(
-        `/api/admin/reports/${reportId}/notify`,
-        {},
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      // update UI state
-      setZoneReports((prev) => {
-        const updatedZone = prev[activeZone].map((r) =>
-          r.id === reportId ? { ...r, notified: true } : r
-        );
-        return { ...prev, [activeZone]: updatedZone };
-      });
-    } catch (err) {
-      console.error("Failed to notify user", err);
-    }
-  };
-
   const zoneSummaries = zones.map((zone) => {
     const reports = zoneReports[zone] || [];
     const resolved = reports.filter((r) => r.status === "Resolved").length;
@@ -238,6 +223,97 @@ export default function WardZones() {
       status: pending > 0 ? "In Progress" : "Clear",
     };
   });
+
+  const handleDetectToxicReports = async () => {
+    setToxicityLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.post(
+        "/api/admin/reports/detect-toxic",
+        { zone: activeZone },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      setToxicReports(response.data.toxicReports);
+    } catch (err) {
+      console.error("Failed to detect toxic reports", err);
+    } finally {
+      setToxicityLoading(false);
+    }
+  };
+
+  // Improved mark as spam handler
+  const handleMarkAsSpam = async (reportId, reasons = []) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.put(
+        `/api/admin/reports/${reportId}/mark-spam`,
+        { reason: reasons.join(", ") },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const updated = res.data.report;
+      if (updated) {
+        // update UI across all zones (report IDs may be string/object)
+        setZoneReports((prev) => {
+          const updatedState = { ...prev };
+          for (const zone in updatedState) {
+            updatedState[zone] = updatedState[zone].map((r) =>
+              r.id === updated._id.toString() || r.id === updated._id
+                ? { ...r, isSpam: true }
+                : r
+            );
+          }
+          return updatedState;
+        });
+
+        // remove from toxic list if needed
+        setToxicReports((prev) => prev.filter((r) => r._id !== reportId));
+
+        addNotification({
+          id: Date.now(),
+          message: `Report ${reportId} marked as spam`,
+          title: "Marked Spam",
+          timestamp: new Date(),
+          read: false,
+        });
+      }
+    } catch (err) {
+      console.error("Failed to mark as spam", err);
+      addNotification({
+        id: Date.now(),
+        message: `Failed to mark ${reportId} as spam`,
+        title: "Error",
+        timestamp: new Date(),
+        read: false,
+      });
+    }
+  };
+
+  // Improved delete handler
+  const handleDeleteReport = async (reportId) => {
+    if (
+      window.confirm("Delete this spam report? This action cannot be undone")
+    ) {
+      try {
+        const token = localStorage.getItem("token");
+        await axios.delete(`/api/admin/reports/${reportId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        // Update UI
+        setZoneReports((prev) => {
+          const updated = { ...prev };
+          for (const zone in updated) {
+            updated[zone] = updated[zone].filter((r) => r.id !== reportId);
+          }
+          return updated;
+        });
+      } catch (err) {
+        console.error("Failed to delete report", err);
+      }
+    }
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -375,85 +451,120 @@ export default function WardZones() {
 
           {/* Right: Zone Reports */}
           <div className="lg:w-2/3 bg-white border rounded">
-            <div className="p-4 border-b font-medium flex justify-between">
-              {activeZone} Reports{" "}
-              <span className="text-gray-500 text-sm">
+            <div className="p-4 border-b flex items-center justify-between">
+              <span className="font-medium flex-1 truncate">
+                {activeZone} Reports
+              </span>
+
+              <div className="flex items-center mx-4">
+                <button
+                  onClick={handleDetectToxicReports}
+                  disabled={toxicityLoading}
+                  className={`px-3 py-1.5 rounded-md text-sm flex items-center gap-1.5
+                ${
+                  toxicityLoading
+                    ? "bg-gray-200 text-gray-600 cursor-not-allowed"
+                    : "bg-red-500 text-white hover:bg-red-600"
+                }
+                transition-colors duration-200`}
+                >
+                  {toxicityLoading ? (
+                    <FiClock className="animate-spin h-3 w-3" />
+                  ) : (
+                    <FiAlertTriangle className="h-3 w-3" />
+                  )}
+                  <span className="whitespace-nowrap">Detect Spam Reports</span>
+                </button>
+              </div>
+
+              <span className="text-sm text-gray-500 flex-1 text-right">
                 ({zoneReports[activeZone]?.length || 0} issues)
               </span>
             </div>
             {zoneReports[activeZone]?.length > 0 ? (
               <div className="divide-y">
-                {zoneReports[activeZone].map((r) => (
-                  <div key={r.id} className="p-4 hover:bg-gray-50">
-                    <div className="flex justify-between">
-                      <h4 className="font-medium">
-                        #{r.id} - {r.title}
-                      </h4>
-                      <span
-                        className={`text-xs px-2 py-1 rounded-full ${
-                          r.status === "Resolved"
-                            ? "bg-green-100 text-green-700"
-                            : r.status === "In Progress"
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-yellow-100 text-yellow-700"
-                        }`}
-                      >
-                        {r.status}
-                      </span>
-                    </div>
-                    <p className="text-xs text-gray-500">
-                      Reported: {r.createdAt.toLocaleDateString()}
-                    </p>
-                    <div className="mt-2 grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                      {/* <div>
-                        <p className="text-gray-500">Officer</p>
-                        <p>{r.resolvedBy || "Unassigned"}</p>
-                      </div>
-                      <div>
-                        <p className="text-gray-500">Resolution Time</p>
-                        <p>{r.resolutionTime || "Pending"}</p>
-                      </div> */}
-
-                      {/* ✅ Show estimated time input + button if NOT resolved AND NOT notified */}
-                      {/* ✅ Show estimated time input + button logic */}
-                      {/* {r.notified !== true && (
-                        <div className="flex items-end gap-2">
-                          <input
-                            type="text"
-                            placeholder="Est. time"
-                            value={resolutionTimes[r.id] || ""}
-                            onChange={(e) =>
-                              handleResolutionTimeChange(r.id, e.target.value)
-                            }
-                            className="border rounded p-1 text-sm w-full"
-                          />
-                          <button
-                            onClick={() =>
-                              r.status !== "Resolved"
-                                ? handleMarkResolved(activeZone, r.id)
-                                : handleNotifyUser(r.id)
-                            }
-                            className="bg-green-600 text-white p-2 rounded"
-                            title={
+                {zoneReports[activeZone]?.map((r) => {
+                  const toxicReport = toxicReports.find(
+                    (tr) => tr._id === r.id
+                  );
+                  return (
+                    <div
+                      key={r.id}
+                      className={`p-4 hover:bg-gray-50 ${
+                        r.isSpam
+                          ? "bg-red-50 border-l-4 border-red-500"
+                          : toxicReport
+                          ? "bg-orange-50 border-l-4 border-orange-500"
+                          : ""
+                      }`}
+                    >
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-medium">
+                            #{r.id} - {r.title}
+                          </h4>
+                          <p className="text-sm text-gray-500">
+                            {r.description}
+                          </p>
+                          <p className="mt-1 text-sm text-gray-700 font-semibold">
+                            Reported: {r.createdAt.toLocaleDateString()}
+                          </p>
+                          {toxicReport && (
+                            <div className="mt-2">
+                              <div className="flex flex-wrap gap-1 mb-2">
+                                {toxicReport.reasons.map((reason) => (
+                                  <span
+                                    key={reason}
+                                    className="text-xs px-2 py-1 rounded bg-orange-100 text-orange-800"
+                                  >
+                                    {reason}
+                                  </span>
+                                ))}
+                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  handleMarkAsSpam(r.id, toxicReport.reasons);
+                                }}
+                                className="flex items-center gap-1 px-3 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                              >
+                                <FiFlag className="h-3 w-3" />
+                                Mark as Spam
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex gap-2">
+                          <span
+                            className={`text-xs px-2 py-1 rounded-full ${
                               r.status === "Resolved"
-                                ? "Notify User"
-                                : "Mark as Resolved"
-                            }
+                                ? "bg-green-100 text-green-700"
+                                : r.status === "In Progress"
+                                ? "bg-blue-100 text-blue-700"
+                                : "bg-yellow-100 text-yellow-700"
+                            }`}
                           >
-                            <FiSend size={16} />
+                            {r.status}
+                          </span>
+                        </div>
+                      </div>
+                      {r.isSpam && (
+                        <div className="mt-2 flex justify-end">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              handleDeleteReport(r.id);
+                            }}
+                            className="flex items-center gap-1 px-3 py-1 text-xs bg-red-500 hover:bg-red-600 text-white rounded transition-colors"
+                          >
+                            <FiTrash2 className="h-3 w-3" />
+                            Delete Permanently
                           </button>
                         </div>
-                      )} */}
-
-                      {/* ✅ If resolved and already notified, show a message */}
-                      {/* {r.status === "Resolved" && r.notified === true && (
-                        <div className="md:col-span-1 text-green-600 text-xs flex items-center">
-                          ✅ User has been notified
-                        </div>
-                      )} */}
+                      )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               <div className="p-6 text-center text-gray-500">

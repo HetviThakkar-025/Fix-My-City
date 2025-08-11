@@ -232,7 +232,7 @@ const WardOfficerDashboard = () => {
             </button>
           </div>
 
-          <div className="hidden sm:ml-6 sm:flex sm:flex-col sm:items-start gap-2">
+          <div className="hidden sm:ml-6 sm:fl.ex sm:flex-col sm:items-start gap-2">
             <button
               onClick={handleLogout}
               className="text-gray-500 hover:text-gray-700 inline-flex items-center text-md font-medium mb-1"
@@ -379,7 +379,7 @@ const WardOfficerDashboard = () => {
                   </span>
                 </div>
 
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Update Status
@@ -403,7 +403,7 @@ const WardOfficerDashboard = () => {
                     </label>
                     <input
                       type="text"
-                      placeholder="Resolution days"
+                      placeholder="Resolution time"
                       value={resolutionNotes[report._id] || ""}
                       onChange={(e) =>
                         setResolutionNotes({
