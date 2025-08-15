@@ -23,13 +23,28 @@ const app = express();
 app.use(express.json());
 
 // Allow CORS from client (React dev server)
+
+const allowedOrigins = [
+  "http://localhost:5173", // local dev
+  "https://fix-my-city-beta.vercel.app",
+  "fix-my-city-5i6tc97fh-hetvi-thakkars-projects.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      // allow requests with no origin like Postman or curl
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg =
+          "The CORS policy for this site does not allow access from the specified Origin.";
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
     credentials: true,
   })
 );
-
 // Connect to MongoDB Atlas
 connectDB();
 
