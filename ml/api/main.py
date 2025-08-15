@@ -6,6 +6,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from typing import Optional
+from pathlib import Path
 from ml.scripts.preprocessing import preprocess_text_column
 from ml.scripts.feature_utils import count_high_words
 from ml.scripts.predict_duplicates import detect_duplicates
@@ -19,8 +20,9 @@ app = FastAPI(
     description="API to predict report priority"
 )
 
+MODEL_PATH = Path(__file__).parent.parent / "models" / "priority_model.pkl"
 print("Loading model & embedder...")
-with open("ml/models/priority_model.pkl", 'rb') as f:
+with open(MODEL_PATH, 'rb') as f:
     model, embedder = pickle.load(f)
 print("Loaded!")
 
