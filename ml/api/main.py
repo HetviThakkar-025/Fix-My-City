@@ -22,9 +22,16 @@ app = FastAPI(
 
 MODEL_PATH = Path(__file__).parent.parent / "models" / "priority_model.pkl"
 print("Loading model & embedder...")
-with open(MODEL_PATH, 'rb') as f:
-    model, embedder = pickle.load(f)
-print("Loaded!")
+
+print(f"Loading model from: {MODEL_PATH}")
+
+try:
+    with open(MODEL_PATH, 'rb') as f:
+        model, embedder = pickle.load(f)
+    print("Model loaded successfully")
+except Exception as e:
+    print(f"Model loading failed: {str(e)}")
+    raise
 
 
 class PredictRequest(BaseModel):
