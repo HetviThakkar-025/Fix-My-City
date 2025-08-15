@@ -17,11 +17,13 @@ export default function AllReports() {
     severity: "All",
   });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Fetch reports from backend
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await axios.get("/api/admin/reports", {
+        const res = await axios.get(`${API_URL}/admin/reports`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
 
@@ -68,16 +70,6 @@ export default function AllReports() {
     setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
-  // const filteredReports = reports.filter((report) => {
-  //   return (
-  //     (filters.status === "All" || report.status === filters.status) &&
-  //     (filters.zone === "All" || report.zone === filters.zone) &&
-  //     (filters.category === "All" || report.category === filters.category) &&
-  //     (filters.severity === "All" ||
-  //       report.severity.toLowerCase() === filters.severity.toLowerCase())
-  //   );
-  // });
-
   const filteredReports = reports
     .filter((report) => {
       return (
@@ -93,7 +85,7 @@ export default function AllReports() {
       return 0;
     });
 
-  // ✅ Handle manual or auto-assign
+  // Handle manual or auto-assign
   const handleAssign = async (reportId, zone) => {
     try {
       // optionally call backend: await axios.put(...)
@@ -115,7 +107,7 @@ export default function AllReports() {
       setLoadingDuplicates(true);
 
       const response = await axios.post(
-        "/api/ml/predict-duplicates",
+        `${API_URL}/ml/predict-duplicates`,
         {
           reports: filteredReports.map((r) => ({
             id: r.id,
@@ -147,7 +139,7 @@ export default function AllReports() {
 
       const descriptions = filteredReports.map((r) => r.description);
       const res = await axios.post(
-        "/api/ml/predict-priority",
+        `${API_URL}/ml/predict-priority`,
         { descriptions },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -171,7 +163,7 @@ export default function AllReports() {
   const handleMerge = async (reportId1, reportId2) => {
     try {
       const res = await axios.post(
-        "/api/admin/reports/merge",
+        `${API_URL}/admin/reports/merge`,
         { report1Id: reportId1, report2Id: reportId2 },
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

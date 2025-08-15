@@ -19,6 +19,8 @@ export default function ReportIssue() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -49,7 +51,7 @@ export default function ReportIssue() {
         formDataImg.append("image", image.file);
         console.log("Uploading image to backend:", image);
 
-        const res = await axios.post("/api/upload", formDataImg, {
+        const res = await axios.post(`${API_URL}/upload`, formDataImg, {
           // console.log("Uploaded image response:", res.data);
           headers: {
             // "Content-Type": "multipart/form-data",
@@ -71,7 +73,7 @@ export default function ReportIssue() {
         isAnonymous: formData.isAnonymous,
       };
 
-      await axios.post("/api/issues", payload, {
+      await axios.post(`${API_URL}/issues`, payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

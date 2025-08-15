@@ -4,11 +4,12 @@ import axios from "axios";
 export default function AnnouncementList() {
   const [announcements, setAnnouncements] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchAnnouncements = async () => {
       try {
-        const res = await axios.get("/api/announcements");
+        const res = await axios.get(`${API_URL}/announcements`);
         setAnnouncements(res.data || []);
       } catch (error) {
         console.error("Error fetching announcements:", error);

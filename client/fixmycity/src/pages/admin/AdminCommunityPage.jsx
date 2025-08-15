@@ -25,12 +25,14 @@ const AdminCommunityPage = () => {
     resolvedReports: [],
   });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Fetch polls with admin privileges
   useEffect(() => {
     const fetchPolls = async () => {
       try {
         setLoadingPolls(true);
-        const res = await axios.get("/api/polls/admin", {
+        const res = await axios.get(`${API_URL}/polls/admin`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -57,7 +59,7 @@ const AdminCommunityPage = () => {
 
   const handleDeletePoll = async (pollId) => {
     try {
-      await axios.delete(`/api/polls/${pollId}`, {
+      await axios.delete(`${API_URL}/polls/${pollId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -72,7 +74,7 @@ const AdminCommunityPage = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      await axios.post("/api/announcements", newAnnouncement, {
+      await axios.post(`${API_URL}/announcements`, newAnnouncement, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setNewAnnouncement({ title: "", content: "", resolvedReports: [] });

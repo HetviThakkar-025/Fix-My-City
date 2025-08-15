@@ -6,6 +6,8 @@ export default function PollCreator({ onPollCreated }) {
   const [options, setOptions] = useState(["", ""]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const handleOptionChange = (index, value) => {
     const newOptions = [...options];
     newOptions[index] = value;
@@ -34,7 +36,7 @@ export default function PollCreator({ onPollCreated }) {
       const validOptions = options.filter((opt) => opt.trim() !== "");
 
       const res = await axios.post(
-        "/api/polls",
+        `${API_URL}/polls`,
         {
           question,
           options: validOptions,

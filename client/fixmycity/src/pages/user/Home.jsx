@@ -18,11 +18,13 @@ function UserHome() {
   const [stats, setStats] = useState([]);
   const [trendingIssues, setTrendingIssues] = useState([]);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchHomeData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("/api/user/home", {
+        const res = await axios.get(`${API_URL}/user/home`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

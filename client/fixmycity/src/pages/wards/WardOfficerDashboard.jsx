@@ -30,6 +30,8 @@ const WardOfficerDashboard = () => {
   const [notification, setNotification] = useState(null);
   const [loadingSummaries, setLoadingSummaries] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const role = localStorage.getItem("role");
     if (role?.startsWith("ward_")) {
@@ -44,7 +46,7 @@ const WardOfficerDashboard = () => {
 
   useEffect(() => {
     const fetchZoneReports = async () => {
-      const res = await fetch("/api/ward/reports", {
+      const res = await fetch(`${API_URL}/ward/reports`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -79,7 +81,7 @@ const WardOfficerDashboard = () => {
     const notes = resolutionNotes[reportId] || "";
 
     try {
-      const res = await fetch(`/api/ward/reports/${reportId}/status`, {
+      const res = await fetch(`${API_URL}/ward/reports/${reportId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -150,7 +152,7 @@ const WardOfficerDashboard = () => {
       }
 
       const token = localStorage.getItem("token");
-      const res = await fetch("/api/ml/generate-summary", {
+      const res = await fetch(`${API_URL}/ml/generate-summary`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

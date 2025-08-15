@@ -9,11 +9,13 @@ export default function Dashboard() {
   const [feedbacks, setFeedbacks] = useState([]);
   const [loadingFeedback, setLoadingFeedback] = useState(true);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchFeedbacks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("/api/feedback", {
+        const res = await axios.get(`${API_URL}/feedback`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setFeedbacks(res.data || []);

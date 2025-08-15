@@ -35,11 +35,13 @@ export default function WardZones() {
   const [toxicReports, setToxicReports] = useState([]);
   const [toxicityLoading, setToxicityLoading] = useState(false);
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // Fetch reports from backend on mount
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await axios.get("/api/admin/reports", {
+        const res = await axios.get(`${API_URL}/admin/reports`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -85,7 +87,7 @@ export default function WardZones() {
   useEffect(() => {
     const fetchAdminNotifications = async () => {
       try {
-        const res = await axios.get("/api/notifications", {
+        const res = await axios.get(`${API_URL}/notifications`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -117,7 +119,7 @@ export default function WardZones() {
 
   const clearAllNotifications = async () => {
     try {
-      await axios.delete("/api/notifications/clear", {
+      await axios.delete(`${API_URL}/notifications/clear`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -140,7 +142,7 @@ export default function WardZones() {
       if (report.status !== "Resolved") {
         // 🔁 1. Mark as resolved
         const res = await axios.put(
-          `/api/admin/zones/resolve/${reportId}`,
+          `${API_URL}/admin/zones/resolve/${reportId}`,
           {
             resolutionTime,
             resolvedBy: "Admin",
@@ -180,7 +182,7 @@ export default function WardZones() {
       } else {
         // ✅ Notify user manually for already resolved
         const notifyRes = await axios.post(
-          "/api/notifications",
+          `${API_URL}/notifications`,
           {
             user: report.createdBy, // Required
             title: "Issue Resolved", // ✅ REQUIRED
@@ -229,7 +231,7 @@ export default function WardZones() {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
-        "/api/admin/reports/detect-toxic",
+        `${API_URL}/admin/reports/detect-toxic`,
         { zone: activeZone },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -247,7 +249,7 @@ export default function WardZones() {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.put(
-        `/api/admin/reports/${reportId}/mark-spam`,
+        `${API_URL}/admin/reports/${reportId}/mark-spam`,
         { reason: reasons.join(", ") },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -297,7 +299,7 @@ export default function WardZones() {
     ) {
       try {
         const token = localStorage.getItem("token");
-        await axios.delete(`/api/admin/reports/${reportId}`, {
+        await axios.delete(`${API_URL}/admin/reports/${reportId}`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

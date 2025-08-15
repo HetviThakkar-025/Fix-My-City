@@ -6,15 +6,19 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const res = await axios.post("/api/auth/login", { email, password });
+      const res = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password,
+      });
       const { token, role: userRole } = res.data;
       console.log("Logging in with:", { email, password });
 

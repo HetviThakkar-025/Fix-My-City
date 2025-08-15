@@ -8,11 +8,13 @@ export default function UserReports() {
   const [editingId, setEditingId] = useState(null);
   const [editForm, setEditForm] = useState({ title: "", description: "" });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     const fetchUserReports = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("/api/issues/my-reports", {
+        const response = await axios.get(`${API_URL}/issues/my-reports`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -38,7 +40,7 @@ export default function UserReports() {
 
   const handleEditSubmit = async (reportId) => {
     try {
-      await axios.patch(`/api/issues/${reportId}`, editForm, {
+      await axios.patch(`${API_URL}/issues/${reportId}`, editForm, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -56,7 +58,7 @@ export default function UserReports() {
 
   const handleDelete = async (reportId) => {
     try {
-      await axios.delete(`/api/issues/${reportId}`, {
+      await axios.delete(`${API_URL}/issues/${reportId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -5,12 +5,13 @@ import { FiAlertCircle, FiCheckCircle } from "react-icons/fi";
 export default function Notifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("/api/notifications", {
+        const res = await axios.get(`${API_URL}/notifications`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -30,7 +31,7 @@ export default function Notifications() {
     try {
       const token = localStorage.getItem("token");
       await axios.patch(
-        `/api/notifications/${id}/read`,
+        `${API_URL}/notifications/${id}/read`,
         {},
         {
           headers: {

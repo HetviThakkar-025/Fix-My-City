@@ -8,14 +8,15 @@ function Register() {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("user"); // default to "user"
   const [error, setError] = useState("");
-
   const navigate = useNavigate();
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleRegister = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await axios.post("/api/auth/register", {
+      const res = await axios.post(`${API_URL}/auth/register`, {
         name,
         email,
         password,

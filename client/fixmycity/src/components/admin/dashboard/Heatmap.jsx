@@ -15,12 +15,13 @@ const getColor = (count) => {
 
 export default function Heatmap() {
   const [features, setFeatures] = useState([]);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Step 1: Get dashboard stats from backend (zoneCounts)
-        const statsRes = await axios.get("/api/admin/dashboard", {
+        const statsRes = await axios.get(`${API_URL}/admin/dashboard`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },

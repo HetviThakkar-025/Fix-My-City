@@ -12,12 +12,13 @@ export default function IssuesChart() {
   });
   const [zoneCounts, setZoneCounts] = useState({});
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("/api/admin/dashboard", {
+        const res = await axios.get(`${API_URL}/admin/dashboard`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

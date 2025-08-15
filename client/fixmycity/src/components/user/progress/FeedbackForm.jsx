@@ -10,6 +10,7 @@ export default function FeedbackForm() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +24,7 @@ export default function FeedbackForm() {
     try {
       const token = localStorage.getItem("token"); // ⬅️ Get token from localStorage
 
-      await axios.post("/api/feedback", formData, {
+      await axios.post(`${API_URL}/feedback`, formData, {
         headers: {
           Authorization: `Bearer ${token}`, // ⬅️ Send auth header
         },

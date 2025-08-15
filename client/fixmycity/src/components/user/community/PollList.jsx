@@ -5,11 +5,12 @@ import axios from "axios";
 export default function PollList() {
   const [polls, setPolls] = useState([]);
   const [loading, setLoading] = useState(true);
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchPolls = async () => {
       try {
-        const res = await axios.get("/api/polls");
+        const res = await axios.get(`${API_URL}/polls`);
         setPolls(res.data);
       } catch (err) {
         console.error("Error fetching polls", err);
@@ -25,7 +26,7 @@ export default function PollList() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `/api/polls/${pollId}/vote`,
+        `${API_URL}/polls/${pollId}/vote`,
         { option },
         {
           headers: {

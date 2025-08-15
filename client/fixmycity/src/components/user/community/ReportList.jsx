@@ -6,11 +6,12 @@ export default function ReportList({ cityFilter }) {
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
+  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const fetchReports = async () => {
       try {
-        const res = await axios.get("/api/issues/community", {
+        const res = await axios.get(`${API_URL}/issues/community`, {
           params: {
             city: cityFilter,
             status: filter !== "all" ? filter : undefined,
@@ -32,7 +33,7 @@ export default function ReportList({ cityFilter }) {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        `/api/issues/${reportId}/upvote`,
+        `${API_URL}/issues/${reportId}/upvote`,
         {}, // empty body
         {
           headers: {
@@ -41,7 +42,7 @@ export default function ReportList({ cityFilter }) {
         }
       );
 
-      setReports( 
+      setReports(
         reports.map((report) =>
           report._id === reportId
             ? { ...report, upvotes: report.upvotes + 1, userUpvoted: true }

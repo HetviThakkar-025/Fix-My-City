@@ -1,6 +1,7 @@
 # Node.js
 node_modules/
 .env
+client/fixmycity/.env.local
 
 # Python virtual environments
 venv/
