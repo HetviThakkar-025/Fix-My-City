@@ -189,19 +189,19 @@ const WardOfficerDashboard = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6 bg-gray-50 min-h-screen">
       <div className="bg-white rounded-xl shadow-sm p-6 mb-6 border border-gray-200">
-        <div className="flex justify-between items-start">
-          <div>
+        <div className="flex flex-col md:flex-row justify-between items-start gap-4 md:gap-0">
+          {/* Left: Dashboard title + badges */}
+          <div className="flex-1">
             <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
               <FiMap className="text-blue-600" />
               {officerZone} Dashboard
             </h1>
-            <div className="flex items-center gap-3 mt-2">
+            <div className="flex flex-wrap items-center gap-3 mt-2">
               <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-3 py-1 rounded-full text-sm">
-                <FiUser size={14} />
-                {officerName}
+                <FiUser size={14} /> {officerName}
               </span>
               <span className="inline-flex items-center gap-1 bg-green-50 text-green-700 px-3 py-1 rounded-full text-sm">
-                <FiCheckCircle size={14} />
+                <FiCheckCircle size={14} />{" "}
                 {
                   reports.filter((r) => r.status?.toLowerCase() === "resolved")
                     .length
@@ -209,7 +209,7 @@ const WardOfficerDashboard = () => {
                 Resolved
               </span>
               <span className="inline-flex items-center gap-1 bg-orange-50 text-orange-700 px-3 py-1 rounded-full text-sm">
-                <FiClock size={14} />
+                <FiClock size={14} />{" "}
                 {
                   reports.filter((r) => r.status?.toLowerCase() !== "resolved")
                     .length
@@ -219,12 +219,12 @@ const WardOfficerDashboard = () => {
             </div>
           </div>
 
-          {/* button placed between */}
-          <div className="mt-4">
+          {/* Center: Generate Summaries */}
+          <div className="w-full md:w-auto mt-4 md:mt-0">
             <button
               onClick={handleGenerateSummaries}
               disabled={loadingSummaries}
-              className={`w-full flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium transition-colors ${
+              className={`w-full md:w-auto md:mr-2 flex items-center gap-2 px-4 py-2 rounded-lg text-white font-medium transition-colors ${
                 loadingSummaries
                   ? "bg-purple-600 cursor-not-allowed opacity-80"
                   : "bg-purple-700 hover:bg-purple-600"
@@ -234,17 +234,19 @@ const WardOfficerDashboard = () => {
             </button>
           </div>
 
-          <div className="sm:ml-6 sm:fl.ex sm:flex-col sm:items-start gap-2">
+          {/* Right: Logout + Filters */}
+          {/* Right: Logout + Filters */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-4 lg:mt-0">
             <button
               onClick={handleLogout}
-              className="text-gray-500 hover:text-gray-700 inline-flex items-center text-md font-medium mb-1"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
-              <FiLogOut className="mr-1" /> Logout
+              <FiLogOut size={16} /> Logout
             </button>
 
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               <FiFilter /> Filters <FiChevronDown />
             </button>
