@@ -5,9 +5,9 @@ import sys
 
 def setup_nlp():
     try:
-        nltk.download('wordnet', quiet=True)
-        nltk.download('averaged_perceptron_tagger', quiet=True)
-        spacy.cli.download('en_core_web_sm', quiet=True)
+        nltk.download('wordnet')
+        nltk.download('averaged_perceptron_tagger')
+        spacy.cli.download('en_core_web_sm')
         print("NLP setup completed successfully")
     except Exception as e:
         print(f"NLP setup failed: {str(e)}", file=sys.stderr)
