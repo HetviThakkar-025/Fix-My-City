@@ -1,18 +1,19 @@
+# main.py
+import os
 import time
+from pathlib import Path
+from typing import List, Dict, Optional
+
+import numpy as np
+import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List, Dict
-import pickle
-import pandas as pd
-import numpy as np
-from typing import Optional
-from pathlib import Path
-from ml.scripts.preprocessing import preprocess_text_column
+
+from ml.scripts.preprocessing import preprocess_text_column, get_nlp
 from ml.scripts.feature_utils import count_high_words
 from ml.scripts.predict_duplicates import detect_duplicates
 from ml.scripts.predict_summary import generate_summary
 from ml.scripts.predict_toxicity import toxicity_detector
-
 
 app = FastAPI(
     title="FixMyCity ML Service",
@@ -21,25 +22,52 @@ app = FastAPI(
 )
 
 MODEL_PATH = Path(__file__).parent.parent / "models" / "priority_model.pkl"
-print("Loading model & embedder...")
 
-print(f"Loading model from: {MODEL_PATH}")
+# Lazy-loaded globals
+model, embedder = None, None
 
-try:
-    with open(MODEL_PATH, 'rb') as f:
-        model, embedder = pickle.load(f)
-    print("Model loaded successfully")
-except Exception as e:
-    print(f"Model loading failed: {str(e)}")
-    raise
+MAX_BATCH_SIZE = 20  # prevent large batch memory spikes
+
+
+def get_model_and_embedder():
+    global model, embedder
+    if model is None or embedder is None:
+        import pickle
+        print(f"[INFO] Loading model & embedder from: {MODEL_PATH}")
+        with open(MODEL_PATH, 'rb') as f:
+            model, embedder = pickle.load(f)
+        print("[INFO] Model & embedder loaded successfully")
+    return model, embedder
+
+
+def build_features(texts: List[str]):
+    if len(texts) > MAX_BATCH_SIZE:
+        raise ValueError(f"Batch too large. Max allowed: {MAX_BATCH_SIZE}")
+
+    model_local, embedder_local = get_model_and_embedder()
+
+    # Preprocessing
+    clean = preprocess_text_column(pd.Series(texts))
+
+    # Embeddings
+    embeddings = embedder_local.encode(clean)
+
+    # Additional features
+    num_high = [count_high_words(text) for text in texts]
+
+    # Combine
+    features = np.hstack([embeddings, np.array(num_high).reshape(-1, 1)])
+    return features
+
+# -------------------- Pydantic Models --------------------
 
 
 class PredictRequest(BaseModel):
-    descriptions: list[str]
+    descriptions: List[str]
 
 
 class PredictResponse(BaseModel):
-    predictions: list[str]
+    predictions: List[str]
 
 
 class DuplicateRequest(BaseModel):
@@ -51,11 +79,11 @@ class DuplicateResponse(BaseModel):
 
 
 class SummaryRequest(BaseModel):
-    descriptions: list[str]
+    descriptions: List[str]
 
 
 class SummaryResponse(BaseModel):
-    summaries: list[str]
+    summaries: List[str]
 
 
 class ToxicityRequest(BaseModel):
@@ -66,62 +94,40 @@ class ToxicityRequest(BaseModel):
 class ToxicityResponse(BaseModel):
     results: List[Dict]
 
-
-def build_features(texts):
-
-    clean = preprocess_text_column(pd.Series(texts))
-
-    embeddings = embedder.encode(clean)  # shape: (n_samples, 384)
-
-    num_high = [count_high_words(text) for text in texts]
-
-    # Combine into feature vectors
-    features = np.hstack([embeddings, np.array(num_high).reshape(-1, 1)])
-    print(f" Feature vector shape: {features.shape}")
-    return features
+# -------------------- API Endpoints --------------------
 
 
 @app.post("/predict-priority", response_model=PredictResponse)
 def predict_priority_batch(req: PredictRequest):
-
     overall_start = time.time()
-
-    # Step 1: build features
-    start = time.time()
     features = build_features(req.descriptions)
-    print(f"Step: Feature building took {time.time() - start:.2f} seconds")
-
-    # Step 2: prediction
     start = time.time()
-    preds = model.predict(features)
-    print(f"Step: Model prediction took {time.time() - start:.2f} seconds")
-
-    print(f" Total request time: {time.time() - overall_start:.2f} seconds")
-
+    model_local, _ = get_model_and_embedder()
+    preds = model_local.predict(features)
+    print(
+        f"[INFO] Feature building + prediction took {time.time() - overall_start:.2f}s")
     return PredictResponse(predictions=preds.tolist())
 
 
 @app.post("/predict-duplicates", response_model=DuplicateResponse)
 def predict_duplicates(req: DuplicateRequest):
-    print(f"Received {len(req.reports)} reports for duplicate detection")
+    print(
+        f"[INFO] Received {len(req.reports)} reports for duplicate detection")
     dup = detect_duplicates(req.reports)
     return DuplicateResponse(duplicates=dup)
 
 
 @app.post("/generate-summary", response_model=SummaryResponse)
 def generate_summary_batch(req: SummaryRequest):
-    print(f"Received {len(req.descriptions)} descriptions for summarization")
+    print(
+        f"[INFO] Received {len(req.descriptions)} descriptions for summarization")
     summaries = generate_summary(req.descriptions)
     return SummaryResponse(summaries=summaries)
 
 
 @app.post("/detect-toxicity", response_model=ToxicityResponse)
 async def detect_toxicity(req: ToxicityRequest):
-    """
-    Detect toxic content in reports using AI model
-    """
-    print(f"Received {len(req.texts)} texts for toxicity detection")
-    # print(req.texts)
+    print(f"[INFO] Received {len(req.texts)} texts for toxicity detection")
     results = toxicity_detector.predict_toxicity(req.texts)
 
     # Apply threshold
@@ -131,10 +137,16 @@ async def detect_toxicity(req: ToxicityRequest):
                 score > req.threshold for label, score in result['scores'].items()
                 if label != 'neutral'
             )
-
     return ToxicityResponse(results=results)
 
 
 @app.get("/")
 def home():
     return {"status": "OK"}
+
+
+# -------------------- Entry Point for Render --------------------
+if __name__ == "__main__":
+    import uvicorn
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("ml.api.main:app", host="0.0.0.0", port=port)

@@ -6,9 +6,17 @@ from nltk.stem import WordNetLemmatizer
 from nltk import pos_tag
 from nltk.corpus import wordnet
 
-# load once
-nlp = spacy.load('en_core_web_sm')
+# Don't load SpaCy model at startup
+nlp = None
 lemmatizer = WordNetLemmatizer()
+
+
+def get_nlp():
+    """Load the SpaCy model only when needed."""
+    global nlp
+    if nlp is None:
+        nlp = spacy.load('en_core_web_sm')
+    return nlp
 
 
 def remove_punc(text):
@@ -44,11 +52,10 @@ def get_wordnet_pos(tag):
 
 
 def lemmatize_text(text):
-    words = [str(token) for token in nlp(text)]
+    nlp_model = get_nlp()  # Load model here
+    words = [str(token) for token in nlp_model(text)]
     tagged = pos_tag(words)
     return [lemmatizer.lemmatize(word, get_wordnet_pos(tag)) for word, tag in tagged]
-
-# used in training
 
 
 def preprocess_text_column(text_series):
