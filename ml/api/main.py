@@ -124,3 +124,8 @@ async def detect_toxicity(req: ToxicityRequest):
             )
 
     return ToxicityResponse(results=results)
+
+
+@app.get("/")
+def home():
+    return {"status": "OK"}
