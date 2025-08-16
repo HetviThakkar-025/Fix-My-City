@@ -133,6 +133,10 @@ function Register() {
             Login
           </a>
         </p>
+
+        <p className="text-center text-sm text-gray-400 mt-6">
+          © {new Date().getFullYear()} Fix My City. All rights reserved.
+        </p>
       </div>
     </div>
   );

@@ -86,6 +86,13 @@ function Login() {
         </form>
 
         <p className="text-center text-sm text-gray-400 mt-6">
+          New here? Create an account{" "}
+          <a href="/register" className="text-blue-600 hover:underline">
+            Register
+          </a>
+        </p>
+
+        <p className="text-center text-sm text-gray-400 mt-6">
           © {new Date().getFullYear()} Fix My City. All rights reserved.
         </p>
       </div>
