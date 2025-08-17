@@ -1,19 +1,20 @@
 # main.py
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from ml.scripts.predict_toxicity import toxicity_detector
+from ml.scripts.predict_summary import generate_summary
+from ml.scripts.predict_duplicates import detect_duplicates
+from ml.scripts.feature_utils import count_high_words
+from ml.scripts.preprocessing import preprocess_text_column, get_nlp
+from pydantic import BaseModel
+from fastapi import FastAPI
+import pandas as pd
+import numpy as np
+from typing import List, Dict, Optional
 import os
 import time
-from pathlib import Path
-from typing import List, Dict, Optional
-
-import numpy as np
-import pandas as pd
-from fastapi import FastAPI
-from pydantic import BaseModel
-
-from ml.scripts.preprocessing import preprocess_text_column, get_nlp
-from ml.scripts.feature_utils import count_high_words
-from ml.scripts.predict_duplicates import detect_duplicates
-from ml.scripts.predict_summary import generate_summary
-from ml.scripts.predict_toxicity import toxicity_detector
 
 app = FastAPI(
     title="FixMyCity ML Service",
@@ -144,3 +145,7 @@ async def detect_toxicity(req: ToxicityRequest):
 def home():
     return {"status": "OK"}
 
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("api.main:app", host="0.0.0.0", port=7860, reload=False)
