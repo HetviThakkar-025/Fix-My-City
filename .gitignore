@@ -2,6 +2,7 @@
 node_modules/
 .env
 client/fixmycity/.env.local
+server/.env.local
 
 # Python virtual environments
 venv/

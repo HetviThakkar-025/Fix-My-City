@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const axios = require("axios");
 
+const ML_API_URL = process.env.ML_API_URL;
+
 // POST /api/ml/predict-priority
 router.post("/predict-priority", async (req, res) => {
   console.log("[Node] Received request to /api/ml/predict-priority");
@@ -10,10 +12,9 @@ router.post("/predict-priority", async (req, res) => {
     const { descriptions } = req.body;
     console.log("[Node] Forwarding descriptions to FastAPI:", descriptions);
 
-    const response = await axios.post(
-      "http://127.0.0.1:8001/predict-priority",
-      { descriptions }
-    );
+    const response = await axios.post(`${ML_API_URL}/predict-priority`, {
+      descriptions,
+    });
     console.log("[Node] Got response from FastAPI:", response.data);
 
     res.json(response.data);
@@ -28,7 +29,7 @@ router.post("/predict-duplicates", async (req, res) => {
   console.log("[Node] Received request to /api/ml/predict-duplicates");
   try {
     const response = await axios.post(
-      "http://127.0.0.1:8001/predict-duplicates",
+      `${ML_API_URL}/predict-duplicates`,
       req.body
     );
     res.json(response.data);
@@ -48,10 +49,9 @@ router.post("/generate-summary", async (req, res) => {
       descriptions.length
     );
 
-    const response = await axios.post(
-      "http://127.0.0.1:8001/generate-summary",
-      { descriptions }
-    );
+    const response = await axios.post(`${ML_API_URL}/generate-summary`, {
+      descriptions,
+    });
 
     console.log("[Node] Got summaries from FastAPI:", response.data);
     res.json(response.data);
@@ -72,7 +72,7 @@ router.post("/detect-toxicity", async (req, res) => {
       threshold,
     });
 
-    const response = await axios.post("http://127.0.0.1:8001/detect-toxicity", {
+    const response = await axios.post(`${ML_API_URL}/detect-toxicity`, {
       texts,
       threshold: threshold || 0.85, // Default threshold if not provided
     });
