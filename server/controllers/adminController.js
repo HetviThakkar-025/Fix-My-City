@@ -3,7 +3,7 @@ const Feedback = require("../models/Feedback");
 const Notification = require("../models/Notification");
 const User = require("../models/User");
 const axios = require("axios");
-const ML_SERVICE_URL = process.env.ML_SERVICE_URL || "http://localhost:8001";
+const ML_API_URL = process.env.ML_API_URL;
 
 exports.getAdminDashboardData = async (req, res) => {
   try {
@@ -217,7 +217,7 @@ exports.detectToxicReports = async (req, res) => {
     const texts = reports.map((r) => `${r.title}\n${r.description}`);
 
     // 3. Call ML service
-    const mlResponse = await axios.post(`${ML_SERVICE_URL}/detect-toxicity`, {
+    const mlResponse = await axios.post(`${ML_API_URL}/detect-toxicity`, {
       texts,
       threshold: 0.85,
     });
