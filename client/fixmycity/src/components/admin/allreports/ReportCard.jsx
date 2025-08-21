@@ -106,6 +106,17 @@ export default function ReportCard({
             {report.description}
           </p>
 
+          <div className="grid grid-cols-3 gap-2 my-2">
+            {report.images.slice(0, 3).map((img, i) => (
+              <img
+                key={i}
+                src={img}
+                alt={`Report ${i}`}
+                className="h-36 w-full object-cover rounded"
+              />
+            ))}
+          </div>
+
           {predictedPriority && (
             <div
               className={`

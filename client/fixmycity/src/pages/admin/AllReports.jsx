@@ -30,6 +30,7 @@ export default function AllReports() {
         const formatted = res.data.map((r) => ({
           id: r._id,
           title: r.title,
+          images: r.images,
           description: r.description,
           category: getCategoryFromTags(r.tags),
           zone: r.zone || "Unknown",

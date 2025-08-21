@@ -364,6 +364,16 @@ const WardOfficerDashboard = () => {
                         {report.location?.address || "Unknown Location"}
                       </div>
                     </div>
+                    <div className="grid grid-cols-3 gap-2 my-2 mt-5">
+                      {report.images.slice(0, 3).map((img, i) => (
+                        <img
+                          key={i}
+                          src={img}
+                          alt={`Report ${i}`}
+                          className="h-36 w-full object-cover rounded"
+                        />
+                      ))}
+                    </div>
                   </div>
                   <span
                     className={`px-3 py-1 rounded-full flex items-center gap-1 text-sm font-medium ${

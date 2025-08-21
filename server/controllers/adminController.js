@@ -80,7 +80,7 @@ exports.getAllReports = async (req, res) => {
   try {
     const reports = await Issue.find()
       .select(
-        "title description tags zone severity status location createdAt upvotes"
+        "title description tags zone severity status location createdAt upvotes images"
       )
       .sort({ createdAt: -1 })
       .lean();
